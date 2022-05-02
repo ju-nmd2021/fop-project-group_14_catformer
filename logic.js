@@ -17,23 +17,30 @@ function catSprite(obj) {
   push();
   strokeWeight(0);
   fill(0, 0, 0);
-  rect(obj.x - 20, obj.y - 25, 40, 20);
-  rect(obj.x - 20, obj.y - 5, 5, 5);
-  rect(obj.x - 10, obj.y - 5, 5, 5);
-  rect(obj.x + 5, obj.y - 5, 5, 5);
-  rect(obj.x + 15, obj.y - 5, 5, 5);
-  rect(obj.x + 7, obj.y - 30, 20, 20);
-  rect(obj.x - 20, obj.y - 35, 5, 10);
+  rect(obj.x - 20, obj.y - 25, 40, 20); //body
+  rect(obj.x - 20, obj.y - 6, 5, 5); //leg 1
+  rect(obj.x - 10, obj.y - 6, 5, 5); //leg 2
+  rect(obj.x + 5, obj.y - 6, 5, 5); //leg 3
+  rect(obj.x + 15, obj.y - 6, 5, 5); //leg 4
+  rect(obj.x + 7, obj.y - 30, 20, 20); //head
+  rect(obj.x - 20, obj.y - 35, 5, 11); //tail
   pop();
 }
 
 //sprite for the floor
-function floorSprite(obj) {
-  push();
+function CollisionBlockSprite(obj) {
   strokeWeight(0);
-  fill(150, 80, 50);
-  rect(0, sHeight - obj.height, sWidth, obj.height);
-  pop();
+  if (obj.type === "floor") {
+    push();
+    fill(150, 80, 50);
+    rect(obj.x, sHeight - obj.height, obj.width, obj.height);
+    pop();
+  } else if (obj.type === "shelf") {
+    push();
+    fill(200, 120, 50);
+    rect(obj.x, sHeight - obj.height, obj.width, obj.height - floor.height);
+    pop();
+  }
 }
 
 //here's all the variables we set before starting everything
@@ -53,8 +60,22 @@ const cat = {
 };
 
 const floor = {
+  x: 0,
+  width: sWidth,
   height: 50,
+  type: "floor",
+  dangerous: false,
 };
+
+const shelf1 = {
+  x: 500,
+  width: 100,
+  height: 100,
+  type: "shelf",
+  dangerous: false,
+};
+
+const collisionBlocks = [floor, shelf1];
 
 //The main draw function that is called many times per second
 function draw() {
@@ -67,16 +88,28 @@ function draw() {
   } else if (gameState === "play") {
     //here's where we have all the gameplay code
     background(250, 230, 150);
-    floorSprite(floor);
+
+    for (let block of collisionBlocks) {
+      CollisionBlockSprite(block);
+    }
+
     catSprite(cat);
 
     //controls the gravity and falling
-    if (cat.y < sHeight - floor.height) {
-      cat.state = "fall";
-      cat.downSpeed += gravity;
-    } else if (cat.downSpeed > 0) {
-      cat.state = "stand";
+    let collisionDetection = 0;
+    for (let block of collisionBlocks) {
+      if (
+        cat.y >= sHeight - block.height &&
+        cat.x < block.x + block.width &&
+        cat.x > block.x
+      ) {
+        collisionDetection++;
+      }
+    }
+    if (collisionDetection > 0 && cat.downSpeed >= 0) {
       cat.downSpeed = 0;
+    } else {
+      cat.downSpeed += gravity;
     }
 
     cat.y += cat.downSpeed;
