@@ -85,7 +85,7 @@ function draw() {
     } else if (gameState === "start") {
         //Here's where we summon the start screen
         background(250, 230, 150);
-        text("press R to start playing", 300, 300);
+        text("press R to start playing", 340, 300);
     } else if (gameState === "play") {
         //here's where we have all the gameplay code
         background(250, 230, 150);
