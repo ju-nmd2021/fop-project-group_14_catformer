@@ -1,3 +1,15 @@
 * {
+  background: #181a18;
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  color: #fff;
+}
+
+main,
+.container {
+  text-align: center;
+  margin: 0 auto;
+}
+
+#mainTitle {
+  color: lightyellow;
 }
