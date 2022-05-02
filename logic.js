@@ -91,4 +91,13 @@ function keyPressed() {
   if (keyCode === 32 && cat.state === "stand") {
     cat.downSpeed = cat.jumpHeight * -1;
   }
+  // left arrow
+  if (keyCode === 37 && cat.state === "stand") {
+    cat.x = cat.x - 10;
+  }
+
+  // right arrow
+  if (keyCode === 39 && cat.state === "stand") {
+    cat.x = cat.x + 10;
+  }
 }
