@@ -5,6 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap"
+      rel="stylesheet"
+    />
     <script src="logic.js"></script>
     <script src="p5.min.js"></script>
     <title>Catformer</title>
@@ -13,7 +19,19 @@
     <div class="container">
       <h1 id="mainTitle">Loading</h1>
       <main></main>
-      <aside>
+      <aside id="gameDescription">
+        <p>
+          Cats love mischief, this is known. In Catformer, your mission is to
+          find a beautiful yet fragile vase and knock it down before your owner
+          is coming back. But beware the obsticales on your journey (especially
+          the scary cleaning monster) for they will only slow you down.
+        </p>
+        <p>
+          Goal: Find and destroy the vase before the time runs out. The faster
+          you are, the more superior of a cat.
+        </p>
+      </aside>
+      <aside id="gameControls">
         <h3>Contols</h3>
         <p>
           Left arrow: Move to the left<br />
