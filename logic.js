@@ -107,8 +107,10 @@ function draw() {
       }
     }
     if (collisionDetection > 0 && cat.downSpeed >= 0) {
+      cat.state = "stand";
       cat.downSpeed = 0;
     } else {
+      cat.state = "fall";
       cat.downSpeed += gravity;
     }
 
