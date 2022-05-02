@@ -1,44 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@400;500;800&family=Exo:ital,wght@0,800;1,800&family=Fredoka+One&family=Fugaz+One&display=swap" rel="stylesheet">
     <script src="logic.js"></script>
     <script src="p5.min.js"></script>
     <title>Catformer</title>
-  </head>
-  <body>
+</head>
+
+<body>
     <div class="container">
-      <h1 id="mainTitle">Loading</h1>
-      <main></main>
-      <aside id="gameDescription">
-        <p>
-          Cats love mischief, this is known. In Catformer, your mission is to
-          find a beautiful yet fragile vase and knock it down before your owner
-          is coming back. But beware the obsticales on your journey (especially
-          the scary cleaning monster) for they will only slow you down.
-        </p>
-        <p>
-          Goal: Find and destroy the vase before the time runs out. The faster
-          you are, the more superior of a cat.
-        </p>
-      </aside>
-      <aside id="gameControls">
-        <h3>Contols</h3>
-        <p>
-          Left arrow: Move to the left<br />
-          Right arrow: Move to the right <br />
-          Space bar: Jump
-        </p>
-      </aside>
+        <h1>Catformer</h1>
+        <h1 id="mainTitle">Loading</h1>
+        <main></main>
+        <div class="asideContainer">
+            <aside id="gameDescription">
+                <h3>Goal</h3>
+                <!-- <p>
+                    Cats love mischief, this is known. In Catformer, your mission is to find a beautiful yet fragile vase and knock it down before your owner is coming back. But beware the obsticales on your journey (especially the scary cleaning monster) for they will only
+                    slow you down.
+                </p> -->
+                <p>
+                    Find and destroy the vase before the time runs out. The faster you are, the more superior of a cat.
+                </p>
+            </aside>
+            <aside id="gameControls">
+                <h3>Controls</h3>
+                <p>
+                    <strong>Left arrow:</strong> Move to the left<br /> <strong> Right arrow:</strong> Move to the right <br /> <strong>Spacebar:</strong> Jump
+                </p>
+            </aside>
+        </div>
     </div>
-  </body>
+</body>
+
 </html>

@@ -53,7 +53,7 @@ const gravity = 0.5;
 const cat = {
     x: sWidth / 2,
     y: sHeight - 300,
-    acceleration: 5,
+    acceleration: 0.02,
     jumpHeight: 10,
     downSpeed: 0,
     sideSpeed: 0,
@@ -121,10 +121,18 @@ function draw() {
         cat.x = cat.x + cat.sideSpeed;
         // left arrow:
         if (keyIsDown(37)) {
+            // with acceleration
+            // cat.sideSpeed -= cat.acceleration;
+
+            //without acceleration
             cat.sideSpeed = -5;
         }
         // right arrow:
         else if (keyIsDown(39)) {
+            // with acceleration
+            // cat.sideSpeed += cat.acceleration;
+
+            //without acceleration
             cat.sideSpeed = 5;
         } else {
             cat.sideSpeed = 0;
@@ -140,15 +148,4 @@ function keyPressed() {
     if (keyCode === 32 && cat.state === "stand") {
         cat.downSpeed = cat.jumpHeight * -1;
     }
-    /*     // left arrow
-        if (keyCode === 37) {
-            // cat.x = cat.x - 10;
-            cat.x = cat.x * -1;
-
-        }
-
-        // right arrow
-        if (keyCode === 39) {
-            cat.x = cat.x + 10;
-        } */
 }
