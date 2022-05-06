@@ -177,7 +177,7 @@ function draw() {
         } else if (indexOfSmallestDistance === 1) {
           //smallest distance is to the bottom of the block. the cat has bumped a ceiling
           if (cat.downSpeed < 0) {
-            cat.downSpeed = 1;
+            cat.downSpeed = 0;
           }
           cat.state = "fall";
         } else if (indexOfSmallestDistance === 2) {
@@ -196,27 +196,11 @@ function draw() {
         cat.downSpeed += gravity;
       }
     }
+
+    //if the cat didn't collide with anything, it should be in the state "fall"
     if (hasCollided === false) {
       cat.state = "fall";
     }
-
-    // let collisionDetection = 0;
-    // for (let block of collisionBlocks) {
-    //   if (
-    //     cat.y >= sHeight - block.height &&
-    //     cat.x < block.x + block.width &&
-    //     cat.x > block.x
-    //   ) {
-    //     collisionDetection++;
-    //   }
-    // }
-    // if (collisionDetection > 0 && cat.downSpeed >= 0) {
-    //   cat.state = "stand";
-    //   cat.downSpeed = 0;
-    // } else {
-    //   cat.state = "fall";
-    //   cat.downSpeed += gravity;
-    // }
 
     cat.y += cat.downSpeed;
 
