@@ -41,6 +41,11 @@ function CollisionBlockSprite(obj) {
     fill(200, 120, 50);
     rect(obj.x, obj.y, obj.width, obj.height);
     pop();
+  } else if (obj.type === "vacuum") {
+    push();
+    fill(200, 50, 50);
+    rect(obj.x, obj.y, obj.width, obj.height);
+    pop();
   }
 }
 
@@ -48,7 +53,7 @@ function CollisionBlockSprite(obj) {
 let mainTitleElement;
 
 let gameState = "loading";
-const gravity = 0.3;
+const gravity = 1;
 
 const cat = {
   x: sWidth / 2,
@@ -96,7 +101,16 @@ const shelf3 = {
   dangerous: false,
 };
 
-const collisionBlocks = [floor, shelf1, shelf2, shelf3];
+const vacuum1 = {
+  x: 100,
+  y: sHeight - 80,
+  width: 80,
+  height: 30,
+  type: "vacuum",
+  dangerous: true,
+};
+
+const collisionBlocks = [floor, shelf1, shelf2, shelf3, vacuum1];
 
 //The main draw function that is called many times per second
 function draw() {
@@ -136,14 +150,15 @@ function draw() {
     }
 
     //controls collision
+    cat.downSpeed += gravity;
     let hasCollided = false;
     for (let block of collisionBlocks) {
       //checks if the cat is within the bounds of a box. has the cat collided with anything?
       if (
-        cat.x < block.x + block.width &&
-        cat.x > block.x &&
-        cat.y < block.y + block.height &&
-        cat.y > block.y
+        cat.x - 10 < block.x + block.width &&
+        cat.x + 10 > block.x &&
+        cat.y - 5 < block.y + block.height &&
+        cat.y + 5 > block.y
       ) {
         hasCollided = true;
         //if yes, let's check from what direction the cat must have come from
@@ -193,7 +208,6 @@ function draw() {
         }
       } else {
         //if the cat hasn't collided with anything, it will be affected by gravity
-        cat.downSpeed += gravity;
       }
     }
 
