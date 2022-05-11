@@ -110,6 +110,15 @@ function draw() {
     //here's where we have all the gameplay code
     background(250, 230, 150);
 
+    // creating a timer
+    push();
+    let timer = "10:00:00";
+    fill(0, 0, 0);
+    textAlign("center");
+    textSize(36);
+    text(timer, sWidth - 100, 50);
+    pop();
+
     for (let block of collisionBlocks) {
       CollisionBlockSprite(block);
     }
