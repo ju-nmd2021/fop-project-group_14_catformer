@@ -19,17 +19,23 @@ function catSprite(obj) {
   strokeWeight(0);
   fill(0, 0, 0);
 
+  translate(obj.x, obj.y);
+
+  if (cat.direction === "left") {
+    scale(-1, 1);
+  }
+
   if (cat.invincibility > 0) {
     fill(255, 50, 50);
   }
 
-  rect(obj.x - 20, obj.y - 25, 40, 20); //body
-  rect(obj.x - 20, obj.y - 6, 5, 5); //leg 1
-  rect(obj.x - 10, obj.y - 6, 5, 5); //leg 2
-  rect(obj.x + 5, obj.y - 6, 5, 5); //leg 3
-  rect(obj.x + 15, obj.y - 6, 5, 5); //leg 4
-  rect(obj.x + 7, obj.y - 30, 20, 20); //head
-  rect(obj.x - 20, obj.y - 35, 5, 11); //tail
+  rect(-20, -25, 40, 20); //body
+  rect(-20, -6, 5, 5); //leg 1
+  rect(-10, -6, 5, 5); //leg 2
+  rect(5, -6, 5, 5); //leg 3
+  rect(15, -6, 5, 5); //leg 4
+  rect(7, -30, 20, 20); //head
+  rect(-20, -35, 5, 11); //tail
   pop();
 }
 
@@ -69,6 +75,7 @@ const cat = {
   sideSpeed: 0,
   state: "stand",
   invincibility: 0,
+  direction: "right",
 };
 
 const floor = {
@@ -154,8 +161,18 @@ function draw() {
 
     catSprite(cat);
 
+    push();
+    translate(width, 0);
+    scale(-1, 1);
+    rect(50, 50, 100, 50);
+    circle(150, 50, 50);
+    pop();
+
     // left arrow:
     if (keyIsDown(37)) {
+      if (cat.direction === "right") {
+        cat.direction = "left";
+      }
       // with acceleration
       // cat.sideSpeed -= cat.acceleration;
 
@@ -164,6 +181,9 @@ function draw() {
     }
     // right arrow:
     else if (keyIsDown(39)) {
+      if (cat.direction === "left") {
+        cat.direction = "right";
+      }
       // with acceleration
       // cat.sideSpeed += cat.acceleration;
 
