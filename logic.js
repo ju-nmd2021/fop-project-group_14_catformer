@@ -35,6 +35,8 @@ function catSprite(obj) {
   rect(5, -6, 5, 5); //leg 3
   rect(15, -6, 5, 5); //leg 4
   rect(7, -30, 20, 20); //head
+  triangle(7, -29, 7, -35, 14, -29);
+  triangle(27, -29, 27, -35, 20, -29);
   rect(-20, -35, 5, 11); //tail
   pop();
 }
@@ -114,6 +116,24 @@ const shelf3 = {
   dangerous: false,
 };
 
+const wallLeft = {
+  x: 0,
+  y: 0,
+  width: 50,
+  height: sHeight - floor.height,
+  type: "floor",
+  dangerous: false,
+};
+
+const wallRight = {
+  x: sWidth - 50,
+  y: 0,
+  width: 50,
+  height: sHeight - floor.height,
+  type: "floor",
+  dangerous: false,
+};
+
 const vacuum1 = {
   x: 100,
   y: sHeight - 80,
@@ -126,7 +146,7 @@ const vacuum1 = {
   speed: 2,
 };
 
-const collisionBlocks = [floor, shelf1, shelf2, shelf3];
+const collisionBlocks = [floor, shelf1, shelf2, shelf3, wallLeft, wallRight];
 
 const obstacles = [vacuum1];
 
