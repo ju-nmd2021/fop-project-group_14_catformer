@@ -161,13 +161,6 @@ function draw() {
 
     catSprite(cat);
 
-    push();
-    translate(width, 0);
-    scale(-1, 1);
-    rect(50, 50, 100, 50);
-    circle(150, 50, 50);
-    pop();
-
     // left arrow:
     if (keyIsDown(37)) {
       if (cat.direction === "right") {
