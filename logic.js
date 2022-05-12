@@ -18,6 +18,11 @@ function catSprite(obj) {
   push();
   strokeWeight(0);
   fill(0, 0, 0);
+
+  if (cat.invincibility > 0) {
+    fill(255, 50, 50);
+  }
+
   rect(obj.x - 20, obj.y - 25, 40, 20); //body
   rect(obj.x - 20, obj.y - 6, 5, 5); //leg 1
   rect(obj.x - 10, obj.y - 6, 5, 5); //leg 2
@@ -63,6 +68,7 @@ const cat = {
   downSpeed: 0,
   sideSpeed: 0,
   state: "stand",
+  invincibility: 0,
 };
 
 const floor = {
@@ -108,9 +114,14 @@ const vacuum1 = {
   height: 30,
   type: "vacuum",
   dangerous: true,
+  startPoint: 50,
+  endPoint: 250,
+  speed: 2,
 };
 
-const collisionBlocks = [floor, shelf1, shelf2, shelf3, vacuum1];
+const collisionBlocks = [floor, shelf1, shelf2, shelf3];
+
+const obstacles = [vacuum1];
 
 //The main draw function that is called many times per second
 function draw() {
@@ -135,6 +146,10 @@ function draw() {
 
     for (let block of collisionBlocks) {
       CollisionBlockSprite(block);
+    }
+
+    for (let obstacle of obstacles) {
+      CollisionBlockSprite(obstacle);
     }
 
     catSprite(cat);
@@ -225,10 +240,39 @@ function draw() {
       cat.state = "fall";
     }
 
+    //collision with things that hurt you
+    for (let obstacle of obstacles) {
+      if (
+        cat.x - 10 < obstacle.x + obstacle.width &&
+        cat.x + 10 > obstacle.x &&
+        cat.y - 5 < obstacle.y + obstacle.height &&
+        cat.y + 5 > obstacle.y &&
+        cat.invincibility === 0
+      ) {
+        //makes the cat jump upwards when taking damage
+        cat.downSpeed = -10;
+
+        //this makes it so that the cat doesn't get hurt many times in a row
+        cat.invincibility = 60;
+      }
+    }
+
+    //this counts down the invincibility
+    if (cat.invincibility > 0) {
+      cat.invincibility--;
+    }
+
     cat.y += cat.downSpeed;
 
     // controls of moving left and right (looked at garrits lecture "12: Example - Move a cat with the keyboard" and took inspiration for this section)
     cat.x = cat.x + cat.sideSpeed;
+
+    for (obstacle of obstacles) {
+      obstacle.x += obstacle.speed;
+      if (obstacle.x > obstacle.endPoint || obstacle.x < obstacle.startPoint) {
+        obstacle.speed *= -1;
+      }
+    }
   }
 }
 
