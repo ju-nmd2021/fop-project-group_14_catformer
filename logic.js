@@ -146,12 +146,17 @@ const vacuum1 = {
   speed: 2,
 };
 
-const collisionBlocks = [floor, shelf1, shelf2, shelf3, wallLeft, wallRight];
+const vase = {
+  // here is where I will add the vase later
+}
+
+const collisionBlocks = [floor, shelf1, shelf2, shelf3, wallLeft, wallRight, vase];
 
 const obstacles = [vacuum1];
 
 //The main draw function that is called many times per second
 function draw() {
+  // Different game states
   if (gameState === "loading") {
     //here we could have a loading screen if we want it, but it might be unnecessary
   } else if (gameState === "start") {
@@ -181,6 +186,7 @@ function draw() {
 
     catSprite(cat);
 
+    // Moving the cat
     // left arrow:
     if (keyIsDown(37)) {
       if (cat.direction === "right") {
@@ -191,9 +197,8 @@ function draw() {
 
       //without acceleration
       cat.sideSpeed = -5;
-    }
-    // right arrow:
-    else if (keyIsDown(39)) {
+    }// right arrow:
+    else if (keyIsDown(39)) {// right arrow:
       if (cat.direction === "left") {
         cat.direction = "right";
       }
@@ -202,7 +207,8 @@ function draw() {
 
       //without acceleration
       cat.sideSpeed = 5;
-    } else {
+    } // cat's not moving:
+    else {
       cat.sideSpeed = 0;
     }
 
@@ -297,15 +303,29 @@ function draw() {
 
     cat.y += cat.downSpeed;
 
-    // controls of moving left and right (looked at garrits lecture "12: Example - Move a cat with the keyboard" and took inspiration for this section)
+    // controls of moving left and right (looked at garrits lecture "12: Example - Move a car with the keyboard" and took inspiration for this section)
     cat.x = cat.x + cat.sideSpeed;
 
+    // What does this one to?
     for (obstacle of obstacles) {
       obstacle.x += obstacle.speed;
       if (obstacle.x > obstacle.endPoint || obstacle.x < obstacle.startPoint) {
         obstacle.speed *= -1;
       }
     }
+    ///// End of play state
+  } else if(gameState === "win"){
+    // Here's the screen if you win the game
+    alert("I AM THE SUPERIOR CAT! SUCK IT, GRAVITY!");
+    // Show your time
+    // Option to Write your name and save it to local storage
+    // Display highscore
+    // Replay button
+  } else if(gameState === "loose"){
+    // Here's the screen if you loose the game
+    alert("Gosh darn, the human is back... I have to be faster next time");
+    // Display highscore
+    // Replay button
   }
 }
 
