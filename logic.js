@@ -2,6 +2,14 @@
 const sWidth = 1100;
 const sHeight = 700;
 
+let timeLimit = 1500; // the game time limit
+let countDown; // = time limit - amount of time passed
+let currentTimeSec = 0; 
+let currentTimeMil = 0;
+let startTimeSec = 0;
+let startTimeMil = 0;
+
+
 function setup() {
   createCanvas(sWidth, sHeight);
 }
@@ -9,8 +17,8 @@ function setup() {
 //here, we wait until the document has loaded fully before setting the gamestate to start
 window.addEventListener("load", () => {
   gameState = "start";
-  mainTitleElement = document.getElementById("mainTitle");
-  mainTitleElement.innerText = "Not loading anymore";
+  // mainTitleElement = document.getElementById("mainTitle");
+  // mainTitleElement.innerText = "Not loading anymore";
 });
 
 //sprite for our main cat :3
@@ -64,7 +72,7 @@ function CollisionBlockSprite(obj) {
 
 //here's all the variables we set before starting everything
 let mainTitleElement;
-let endgameText;
+let gameText;
 
 let gameState = "loading";
 const gravity = 1;
@@ -157,24 +165,55 @@ const obstacles = [vacuum1];
 
 //The main draw function that is called many times per second
 function draw() {
+  console.log(gameState);
+  console.log(countDown+"cd");
+  console.log(currentTimeSec);
   // Different game states
   if (gameState === "loading") {
     //here we could have a loading screen if we want it, but it might be unnecessary
   } else if (gameState === "start") {
     //Here's where we summon the start screen
+    //let currentTime = 0;
     background(250, 230, 150);
-    text("press R to start playing", 340, 300);
+    textAlign(CENTER);
+
+    //headline
+    push();
+    textSize(50);
+    textFont("Exo");
+    text("CATFORMER", sWidth/2, sHeight/2);
+    pop();
+
+    //game text
+    push();
+    gameText = "press R to start playing";    
+    text(gameText, sWidth/2, sHeight/2+40);
+    pop();
+
   } else if (gameState === "play") {
     //here's where we have all the gameplay code
     background(250, 230, 150);
 
+    // Testing countdown timer based on this tutorial: https://www.youtube.com/watch?v=rKhwDhp9dcs&ab_channel=flanniganable
+
+    currentTimeSec = int(millis()/1000); // this runs in the background and counts how many seconds has passed  
+    currentTimeMil = int(millis()/10); // this runs in the background and counts how many milliseconds has passed  
+
+    countDown = timeLimit - (currentTimeSec-startTimeSec);
+    let countDownMil = timeLimit - (currentTimeMil-startTimeMil);
+    
+    if(countDown<0){
+      countDown=0;
+      gameState="loose";
+    }
+
     // creating a timer
     push();
-    let timer = "10:00:00";
+    //let timer = "10:00:00";
     fill(0, 0, 0);
     textAlign("center");
     textSize(36);
-    text(timer, sWidth - 100, 50);
+    text(countDown+":"+countDownMil%100, sWidth - 150, 50);
     pop();
 
     for (let block of collisionBlocks) {
@@ -189,7 +228,7 @@ function draw() {
 
     // Moving the cat
     // left arrow:
-    if (keyIsDown(37)) {
+    if (keyIsDown(37)||keyIsDown(65)) {
       if (cat.direction === "right") {
         cat.direction = "left";
       }
@@ -199,7 +238,7 @@ function draw() {
       //without acceleration
       cat.sideSpeed = -5;
     }// right arrow:
-    else if (keyIsDown(39)) {// right arrow:
+    else if (keyIsDown(39)||keyIsDown(68)) {// right arrow:
       if (cat.direction === "left") {
         cat.direction = "right";
       }
@@ -318,9 +357,22 @@ function draw() {
   } else if(gameState === "win"){
     // Here's the screen if you win the game
     background('lightgreen');
-    endgameText = "I AM THE SUPERIOR CAT! SUCK IT, GRAVITY!";
+
     textAlign(CENTER);
-    text(endgameText, sWidth/2, sHeight/2);
+
+    //headline
+    push();
+    textSize(50);
+    textFont("Exo");
+    text("VICTORY", sWidth/2, 100);
+    pop();
+
+    //game text
+    push();
+    gameText = "I AM THE SUPERIOR CAT! SUCK IT, GRAVITY!";    
+    text(gameText, sWidth/2, sHeight/5);
+    text("press R to play again", sWidth/2, sHeight/4);
+    pop();
     // Show your time
     // Option to Write your name and save it to local storage
     // Display highscore
@@ -328,9 +380,23 @@ function draw() {
   } else if(gameState === "loose"){
     // Here's the screen if you loose the game
     background('red');
-    endgameText = "Gosh darn, the human is back... I have to be faster next time";
     textAlign(CENTER);
-    text(endgameText, sWidth/2, sHeight/2);
+
+    //headline
+    push();
+    textSize(50);
+    textFont("Exo");
+    text("GAME OVER", sWidth/2, 100);
+    pop();
+
+    //game text
+    push();
+    gameText = "Gosh darn, the human is back... I have to be faster next time";
+    text(gameText, sWidth/2, sHeight/5);
+    text("press R to play again", sWidth/2, sHeight/4);
+    pop();
+
+
     // Display highscore
     // Replay button
   }
@@ -338,8 +404,11 @@ function draw() {
 
 function keyPressed() {
   console.log(keyCode);
-  if (gameState === "start" && keyCode === 82) {
+  if (gameState === "start" || gameState === "win" || gameState === "loose" && keyCode === 82) {
     gameState = "play";
+    // startTime checks at what time we pressed the play button. the varieble is used in our countdown timer in our "play" gamestate
+    startTimeSec = int(millis()/1000); 
+    startTimeMil = int(millis()/100);
   }
   if (keyCode === 32 && cat.state === "stand") {
     cat.downSpeed = cat.jumpHeight * -1;
