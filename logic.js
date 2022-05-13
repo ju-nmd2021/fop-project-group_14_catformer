@@ -1,6 +1,6 @@
 //here's our one source of truth for the canvas width and height
-const sWidth = 800;
-const sHeight = 600;
+const sWidth = 1100;
+const sHeight = 700;
 
 function setup() {
   createCanvas(sWidth, sHeight);
