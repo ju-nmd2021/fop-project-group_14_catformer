@@ -64,6 +64,7 @@ function CollisionBlockSprite(obj) {
 
 //here's all the variables we set before starting everything
 let mainTitleElement;
+let endgameText;
 
 let gameState = "loading";
 const gravity = 1;
@@ -316,14 +317,20 @@ function draw() {
     ///// End of play state
   } else if(gameState === "win"){
     // Here's the screen if you win the game
-    alert("I AM THE SUPERIOR CAT! SUCK IT, GRAVITY!");
+    background('lightgreen');
+    endgameText = "I AM THE SUPERIOR CAT! SUCK IT, GRAVITY!";
+    textAlign(CENTER);
+    text(endgameText, sWidth/2, sHeight/2);
     // Show your time
     // Option to Write your name and save it to local storage
     // Display highscore
     // Replay button
   } else if(gameState === "loose"){
     // Here's the screen if you loose the game
-    alert("Gosh darn, the human is back... I have to be faster next time");
+    background('red');
+    endgameText = "Gosh darn, the human is back... I have to be faster next time";
+    textAlign(CENTER);
+    text(endgameText, sWidth/2, sHeight/2);
     // Display highscore
     // Replay button
   }
@@ -337,4 +344,13 @@ function keyPressed() {
   if (keyCode === 32 && cat.state === "stand") {
     cat.downSpeed = cat.jumpHeight * -1;
   }
+  // testing our win and loose states
+  // Press W for win state
+  if (gameState === "play" && keyCode === 87) {
+    gameState = "win";
+  }
+    // Press Q for loose state
+    if (gameState === "play" && keyCode === 81) {
+      gameState = "loose";
+    }
 }
