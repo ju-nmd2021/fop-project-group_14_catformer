@@ -42,6 +42,7 @@ function catSprite(obj) {
   triangle(27, -29, 27, -35, 20, -29);
   rect(-20, -35, 5, 11); //tail
 
+  //if cat is falling, their legs are out
   if (obj.state === "fall") {
     rect(-25, -16, 5, 5); //leg 1
     rect(-25, -8, 5, 5); //leg 2
@@ -73,7 +74,7 @@ function CollisionBlockSprite(obj) {
     fill(200, 120, 50);
     rect(obj.x, obj.y, obj.width, obj.height);
     pop();
-  } else if (obj.type === "vacuum") {
+  } else if (obj.type === "obstacle") {
     push();
     fill(200, 50, 50);
     rect(obj.x, obj.y, obj.width, obj.height);
@@ -160,11 +161,23 @@ const vacuum1 = {
   y: sHeight - 80,
   width: 80,
   height: 30,
-  type: "vacuum",
+  type: "obstacle",
   dangerous: true,
   startPoint: 50,
   endPoint: 250,
   speed: 2,
+};
+
+const cactus1 = {
+  x: 800,
+  y: floor.y - 80,
+  width: 50,
+  height: 80,
+  type: "obstacle",
+  dangerous: true,
+  startPoint: 0,
+  endPoint: 0,
+  speed: 0,
 };
 
 const vase = {
@@ -181,7 +194,7 @@ const collisionBlocks = [
   vase,
 ];
 
-const obstacles = [vacuum1];
+const obstacles = [vacuum1, cactus1];
 
 //The main draw function that is called many times per second
 function draw() {
@@ -226,6 +239,7 @@ function draw() {
       gameState = "loose";
     }
 
+    //every 5 milliseconds, the cat goes into the second run sprite
     if ((currentTimeMil / 5) % 2 === 0) {
       cat.runSprite *= -1;
     }
