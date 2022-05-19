@@ -385,6 +385,11 @@ function draw() {
                         cat.sideSpeed = 0;
                     }
                 }
+
+                // if statement for if the cat has collided with the vase
+                if (block.type === "vase") {
+                    gameState = "win";
+                }
             } else {
                 //if the cat hasn't collided with anything, it will be affected by gravity
             }
