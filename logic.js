@@ -164,7 +164,6 @@ const shelf4 = {
     type: "shelf",
     dangerous: false,
 };
-
 // she shelf that holds the vase
 const shelf5 = {
     x: vase.x - vase.width * 4.5,
@@ -174,7 +173,6 @@ const shelf5 = {
     type: "shelf",
     dangerous: false,
 };
-
 
 const wallLeft = {
     x: 0,
@@ -217,8 +215,6 @@ const cactus1 = {
     endPoint: 0,
     speed: 0,
 };
-
-
 
 const collisionBlocks = [
     floor,
@@ -263,6 +259,8 @@ function draw() {
     } else if (gameState === "play") {
         //here's where we have all the gameplay code
         background(250, 230, 150);
+
+
 
         // Testing countdown timer based on this tutorial: https://www.youtube.com/watch?v=rKhwDhp9dcs&ab_channel=flanniganable
 
@@ -439,6 +437,10 @@ function draw() {
         // Here's the screen if you win the game
         background("lightgreen");
 
+        // resetting cat position
+        cat.x = sWidth / 2;
+        cat.y = sHeight - 30;
+
         textAlign(CENTER);
 
         //headline
@@ -462,6 +464,10 @@ function draw() {
         // Here's the screen if you loose the game
         background("red");
         textAlign(CENTER);
+
+        // resetting cat position
+        cat.x = sWidth / 2;
+        cat.y = sHeight - 30;
 
         //headline
         push();
