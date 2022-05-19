@@ -8,6 +8,11 @@ let currentTimeSec = 0;
 let currentTimeMil = 0;
 let startTimeSec = 0;
 let startTimeMil = 0;
+let vaseImg;
+
+function preload() {
+    vaseImg = loadImage('images/vase.png');
+}
 
 function setup() {
     createCanvas(sWidth, sHeight);
@@ -82,7 +87,7 @@ function CollisionBlockSprite(obj) {
     } else if (obj.type === "vase") {
         push();
         fill("green");
-        rect(obj.x, obj.y, obj.width, obj.height);
+        image(vaseImg, obj.x, obj.y, obj.width, obj.height);
         pop();
     }
 }
@@ -110,13 +115,14 @@ const cat = {
 const vase = {
     x: 800,
     y: 100,
-    width: 50,
-    height: 80,
+    width: 96,
+    height: 120,
     type: "vase",
     dangerous: false,
     startPoint: 0,
     endPoint: 0,
     speed: 0,
+    img: vaseImg,
 };
 
 
@@ -166,7 +172,7 @@ const shelf4 = {
 };
 // she shelf that holds the vase
 const shelf5 = {
-    x: vase.x - vase.width * 4.5,
+    x: vase.x - 200,
     y: vase.y + vase.height,
     width: 300,
     height: 50,
@@ -259,7 +265,6 @@ function draw() {
     } else if (gameState === "play") {
         //here's where we have all the gameplay code
         background(250, 230, 150);
-
 
 
         // Testing countdown timer based on this tutorial: https://www.youtube.com/watch?v=rKhwDhp9dcs&ab_channel=flanniganable
