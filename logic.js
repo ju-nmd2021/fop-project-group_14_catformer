@@ -4,11 +4,10 @@ const sHeight = 700;
 
 let timeLimit = 1500; // the game time limit
 let countDown; // = time limit - amount of time passed
-let currentTimeSec = 0; 
+let currentTimeSec = 0;
 let currentTimeMil = 0;
 let startTimeSec = 0;
 let startTimeMil = 0;
-
 
 function setup() {
   createCanvas(sWidth, sHeight);
@@ -38,14 +37,26 @@ function catSprite(obj) {
   }
 
   rect(-20, -25, 40, 20); //body
-  rect(-20, -6, 5, 5); //leg 1
-  rect(-10, -6, 5, 5); //leg 2
-  rect(5, -6, 5, 5); //leg 3
-  rect(15, -6, 5, 5); //leg 4
   rect(7, -30, 20, 20); //head
   triangle(7, -29, 7, -35, 14, -29);
   triangle(27, -29, 27, -35, 20, -29);
   rect(-20, -35, 5, 11); //tail
+
+  if (obj.state === "fall") {
+    rect(-25, -16, 5, 5); //leg 1
+    rect(-25, -8, 5, 5); //leg 2
+    rect(20, -8, 5, 5); //leg 3
+  } else if ((keyIsDown(37) || keyIsDown(39)) && obj.runSprite === 1) {
+    rect(-25, -16, 5, 5); //leg 1
+    rect(-25, -8, 5, 5); //leg 2
+    rect(20, -8, 5, 5); //leg 3
+  } else {
+    rect(-20, -6, 5, 5); //leg 1
+    rect(-10, -6, 5, 5); //leg 2
+    rect(5, -6, 5, 5); //leg 3
+    rect(15, -6, 5, 5); //leg 4
+  }
+
   pop();
 }
 
@@ -87,6 +98,7 @@ const cat = {
   state: "stand",
   invincibility: 0,
   direction: "right",
+  runSprite: 1,
 };
 
 const floor = {
@@ -157,16 +169,24 @@ const vacuum1 = {
 
 const vase = {
   // here is where I will add the vase later
-}
+};
 
-const collisionBlocks = [floor, shelf1, shelf2, shelf3, wallLeft, wallRight, vase];
+const collisionBlocks = [
+  floor,
+  shelf1,
+  shelf2,
+  shelf3,
+  wallLeft,
+  wallRight,
+  vase,
+];
 
 const obstacles = [vacuum1];
 
 //The main draw function that is called many times per second
 function draw() {
   console.log(gameState);
-  console.log(countDown+"cd");
+  console.log(countDown + "cd");
   console.log(currentTimeSec);
   // Different game states
   if (gameState === "loading") {
@@ -181,30 +201,33 @@ function draw() {
     push();
     textSize(50);
     textFont("Exo");
-    text("CATFORMER", sWidth/2, sHeight/2);
+    text("CATFORMER", sWidth / 2, sHeight / 2);
     pop();
 
     //game text
     push();
-    gameText = "press R to start playing";    
-    text(gameText, sWidth/2, sHeight/2+40);
+    gameText = "press R to start playing";
+    text(gameText, sWidth / 2, sHeight / 2 + 40);
     pop();
-
   } else if (gameState === "play") {
     //here's where we have all the gameplay code
     background(250, 230, 150);
 
     // Testing countdown timer based on this tutorial: https://www.youtube.com/watch?v=rKhwDhp9dcs&ab_channel=flanniganable
 
-    currentTimeSec = int(millis()/1000); // this runs in the background and counts how many seconds has passed  
-    currentTimeMil = int(millis()/10); // this runs in the background and counts how many milliseconds has passed  
+    currentTimeSec = int(millis() / 1000); // this runs in the background and counts how many seconds has passed
+    currentTimeMil = int(millis() / 10); // this runs in the background and counts how many milliseconds has passed
 
-    countDown = timeLimit - (currentTimeSec-startTimeSec);
-    let countDownMil = timeLimit - (currentTimeMil-startTimeMil);
-    
-    if(countDown<0){
-      countDown=0;
-      gameState="loose";
+    countDown = timeLimit - (currentTimeSec - startTimeSec);
+    let countDownMil = timeLimit - (currentTimeMil - startTimeMil);
+
+    if (countDown < 0) {
+      countDown = 0;
+      gameState = "loose";
+    }
+
+    if ((currentTimeMil / 5) % 2 === 0) {
+      cat.runSprite *= -1;
     }
 
     // creating a timer
@@ -213,7 +236,7 @@ function draw() {
     fill(0, 0, 0);
     textAlign("center");
     textSize(36);
-    text(countDown+":"+countDownMil%100, sWidth - 150, 50);
+    text(countDown + ":" + (countDownMil % 100), sWidth - 150, 50);
     pop();
 
     for (let block of collisionBlocks) {
@@ -228,7 +251,7 @@ function draw() {
 
     // Moving the cat
     // left arrow:
-    if (keyIsDown(37)||keyIsDown(65)) {
+    if (keyIsDown(37) || keyIsDown(65)) {
       if (cat.direction === "right") {
         cat.direction = "left";
       }
@@ -237,8 +260,9 @@ function draw() {
 
       //without acceleration
       cat.sideSpeed = -5;
-    }// right arrow:
-    else if (keyIsDown(39)||keyIsDown(68)) {// right arrow:
+    } // right arrow:
+    else if (keyIsDown(39) || keyIsDown(68)) {
+      // right arrow:
       if (cat.direction === "left") {
         cat.direction = "right";
       }
@@ -354,9 +378,9 @@ function draw() {
       }
     }
     ///// End of play state
-  } else if(gameState === "win"){
+  } else if (gameState === "win") {
     // Here's the screen if you win the game
-    background('lightgreen');
+    background("lightgreen");
 
     textAlign(CENTER);
 
@@ -364,38 +388,37 @@ function draw() {
     push();
     textSize(50);
     textFont("Exo");
-    text("VICTORY", sWidth/2, 100);
+    text("VICTORY", sWidth / 2, 100);
     pop();
 
     //game text
     push();
-    gameText = "I AM THE SUPERIOR CAT! SUCK IT, GRAVITY!";    
-    text(gameText, sWidth/2, sHeight/5);
-    text("press R to play again", sWidth/2, sHeight/4);
+    gameText = "I AM THE SUPERIOR CAT! SUCK IT, GRAVITY!";
+    text(gameText, sWidth / 2, sHeight / 5);
+    text("press R to play again", sWidth / 2, sHeight / 4);
     pop();
     // Show your time
     // Option to Write your name and save it to local storage
     // Display highscore
     // Replay button
-  } else if(gameState === "loose"){
+  } else if (gameState === "loose") {
     // Here's the screen if you loose the game
-    background('red');
+    background("red");
     textAlign(CENTER);
 
     //headline
     push();
     textSize(50);
     textFont("Exo");
-    text("GAME OVER", sWidth/2, 100);
+    text("GAME OVER", sWidth / 2, 100);
     pop();
 
     //game text
     push();
     gameText = "Gosh darn, the human is back... I have to be faster next time";
-    text(gameText, sWidth/2, sHeight/5);
-    text("press R to play again", sWidth/2, sHeight/4);
+    text(gameText, sWidth / 2, sHeight / 5);
+    text("press R to play again", sWidth / 2, sHeight / 4);
     pop();
-
 
     // Display highscore
     // Replay button
@@ -404,13 +427,17 @@ function draw() {
 
 function keyPressed() {
   console.log(keyCode);
-  if (gameState === "start" || gameState === "win" || gameState === "loose" && keyCode === 82) {
+  if (
+    gameState === "start" ||
+    gameState === "win" ||
+    (gameState === "loose" && keyCode === 82)
+  ) {
     gameState = "play";
     // startTime checks at what time we pressed the play button. the varieble is used in our countdown timer in our "play" gamestate
-    startTimeSec = int(millis()/1000); 
-    startTimeMil = int(millis()/100);
+    startTimeSec = int(millis() / 1000);
+    startTimeMil = int(millis() / 100);
   }
-  if (keyCode === 32 && cat.state === "stand") {
+  if (keyCode === 90 && cat.state === "stand") {
     cat.downSpeed = cat.jumpHeight * -1;
   }
   // testing our win and loose states
@@ -418,8 +445,8 @@ function keyPressed() {
   if (gameState === "play" && keyCode === 87) {
     gameState = "win";
   }
-    // Press Q for loose state
-    if (gameState === "play" && keyCode === 81) {
-      gameState = "loose";
-    }
+  // Press Q for loose state
+  if (gameState === "play" && keyCode === 81) {
+    gameState = "loose";
+  }
 }
