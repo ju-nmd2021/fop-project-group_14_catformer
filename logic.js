@@ -9,9 +9,13 @@ let currentTimeMil = 0;
 let startTimeSec = 0;
 let startTimeMil = 0;
 let vaseImg;
+let vacuumImg;
 
 function preload() {
+    // Loading images
     vaseImg = loadImage('images/vase.png');
+    vacuumImg = loadImage('images/vacuum.png');
+
 }
 
 function setup() {
@@ -32,6 +36,8 @@ function catSprite(obj) {
     fill(0, 0, 0);
 
     translate(obj.x, obj.y);
+    // test scale
+    scale(1.3);
 
     if (cat.direction === "left") {
         scale(-1, 1);
@@ -82,11 +88,12 @@ function CollisionBlockSprite(obj) {
     } else if (obj.type === "obstacle") {
         push();
         fill(200, 50, 50);
-        rect(obj.x, obj.y, obj.width, obj.height);
+        //rect(obj.x, obj.y, obj.width, obj.height);
+        image(vacuumImg, obj.x, obj.y, obj.width, obj.height);
         pop();
     } else if (obj.type === "vase") {
         push();
-        fill("green");
+        //fill("green");
         image(vaseImg, obj.x, obj.y, obj.width, obj.height);
         pop();
     }
@@ -124,7 +131,6 @@ const vase = {
     speed: 0,
     img: vaseImg,
 };
-
 
 const floor = {
     x: 0,
@@ -208,6 +214,7 @@ const vacuum1 = {
     startPoint: 50,
     endPoint: 250,
     speed: 2,
+    img: vacuumImg,
 };
 
 const cactus1 = {
@@ -220,6 +227,7 @@ const cactus1 = {
     startPoint: 0,
     endPoint: 0,
     speed: 0,
+    img: vacuumImg,
 };
 
 const collisionBlocks = [
@@ -264,7 +272,7 @@ function draw() {
         pop();
     } else if (gameState === "play") {
         //here's where we have all the gameplay code
-        background(250, 230, 150);
+        background("#9FBFD1");
 
 
         // Testing countdown timer based on this tutorial: https://www.youtube.com/watch?v=rKhwDhp9dcs&ab_channel=flanniganable
