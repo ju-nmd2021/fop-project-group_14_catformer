@@ -344,7 +344,7 @@ function draw() {
 
     //game text
     push();
-    gameText = "press Enter to start playing";
+    gameText = "press ENTER to start playing";
     text(gameText, sWidth / 2, sHeight / 2 + 40);
     pop();
 
@@ -577,6 +577,11 @@ function draw() {
       vase.x += 5;
       vase.y += vase.speed;
       vase.rotation += 0.1;
+    } else {
+      vase.rotation = 0;
+      vase.broken = true;
+      console.log("rotation: " + vase.rotation);
+      console.log("vase x: " + vase.x);
     }
 
     textAlign(CENTER);
