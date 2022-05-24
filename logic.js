@@ -846,6 +846,118 @@ function draw() {
             }
             ///// End of play state
         }
+    } else if (gameState === "win") {
+        // Here's the screen if you win the game
+        background("lightgreen");
+
+        for (let block of collisionBlocks) {
+            CollisionBlockSprite(block);
+        }
+
+        for (let obstacle of obstacles) {
+            CollisionBlockSprite(obstacle);
+        }
+
+        // resetting cat position
+        cat.x = sWidth / 2;
+        cat.y = sHeight - 30;
+
+        if (vase.y < sHeight - floor.height) {
+            vase.speed += gravity;
+            vase.x += 5;
+            vase.y += vase.speed;
+            vase.rotation += 0.1;
+        } else {
+            vase.rotation = 0;
+            vase.broken = true;
+            console.log("rotation: " + vase.rotation);
+            console.log("vase x: " + vase.x);
+        }
+
+        textAlign(CENTER);
+
+        //headline
+        push();
+        textSize(50);
+        textFont("Exo");
+        text("VICTORY", sWidth / 2, 100);
+        pop();
+
+        //game text
+        push();
+        gameText = "I AM THE SUPERIOR CAT! SUCK IT, GRAVITY!";
+        text(gameText, sWidth / 2, sHeight / 5);
+        push();
+        textSize(20);
+        text(
+            "You completed it with " + playerScore + " seconds left",
+            sWidth / 2,
+            sHeight / 4
+        );
+
+        //if you ended up 6th on the scoreboard, you don't get to join
+        if (playerPosition === 5) {
+            text("You didn't get on the leaderboard", sWidth / 2, sHeight / 3);
+        } else if (playerPosition === -1) {
+            //if you didn't write your name, you don't get to join
+            text("You didn't enter your name in the field!", sWidth / 2, sHeight / 3);
+        } else {
+            //otherwise, you've joined the scoreboard
+            let positionOnLeaderboard = playerPosition + 1;
+            text(
+                "You got position " + positionOnLeaderboard + " on the leaderboard!",
+                sWidth / 2,
+                sHeight / 3
+            );
+        }
+
+        //Loops through all results from the scoreboard and displays them
+        push();
+        textSize(20);
+        let userPosition = 0;
+        for (let index in sessionScoreBoard) {
+            let player = sessionScoreBoard[index];
+            userPosition++;
+            text(
+                userPosition + ". " + player.name + ": " + player.score + "s",
+                sWidth / 2,
+                sHeight / 2 + index * 20
+            );
+        }
+        pop();
+
+        pop();
+        text("press ENTER to play again", sWidth / 2, sHeight - 100);
+        pop();
+        // Show your time
+        // Option to Write your name and save it to local storage
+        // Display highscore
+        // Replay button
+    } else if (gameState === "loose") {
+        // Here's the screen if you loose the game
+        background("red");
+        textAlign(CENTER);
+
+        // resetting cat position
+        cat.x = sWidth / 2;
+        cat.y = sHeight - 30;
+
+        //headline
+        push();
+        textSize(50);
+        textFont("Exo");
+        text("GAME OVER", sWidth / 2, 100);
+        pop();
+
+        //game text
+        push();
+        gameText = "Gosh darn, the human is back... I have to be faster next time";
+        text(gameText, sWidth / 2, sHeight / 5);
+        text("press ENTER to play again", sWidth / 2, sHeight / 4);
+        pop();
+
+        // Display highscore
+        // Replay button
     }
 
     //checks whether the new score is good enough to be placed on the scoreboard
@@ -877,6 +989,7 @@ function draw() {
         localStorage.scoreBoard = JSON.stringify(sessionScoreBoard);
     }
 
+    // is says this isn't being used?
     function keyPressed() {
         console.log(keyCode);
         //if you press enter, you move between game states
