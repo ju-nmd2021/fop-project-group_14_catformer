@@ -8,11 +8,15 @@ let currentTimeSec = 0;
 let currentTimeMil = 0;
 let startTimeSec = 0;
 let startTimeMil = 0;
+let timePenalty = 0;
+
+// image variables
 let vaseImg;
 let brokenVaseImg;
 let vacuumImg;
 let cactusImg;
-let timePenalty = 0;
+let fireplaceImg;
+
 
 function preload() {
     // Loading images
@@ -20,6 +24,8 @@ function preload() {
     brokenVaseImg = loadImage("images/broken-vase.png");
     vacuumImg = loadImage("images/vacuum.png");
     cactusImg = loadImage("images/cactus.png");
+    fireplaceImg = loadImage("images/fireplace.png");
+
 
 }
 
@@ -270,7 +276,7 @@ const vacuum1 = {
 };
 
 const cactus1 = {
-    x: 800,
+    x: 580,
     y: floor.y - 180 * 0.9,
     width: 112 * 0.9,
     height: 190 * 0.9,
@@ -332,7 +338,10 @@ function draw() {
         pop();
     } else if (gameState === "play") {
         //here's where we have all the gameplay code
-        background("#9FBFD1");
+
+        // drawing the room:
+        background("#9FBFD1"); // wallpaper 
+        image(fireplaceImg, sWidth - 300 - (338 / 2), sHeight / 2, 338, 301); // fireplace
 
         // Resetting the vase img
         vase.broken = false;
