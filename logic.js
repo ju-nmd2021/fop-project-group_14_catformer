@@ -123,7 +123,9 @@ function CollisionBlockSprite(obj) {
   } else if (obj.type === "vase") {
     push();
     //fill("green");
-    image(vaseImg, obj.x, obj.y, obj.width, obj.height);
+    translate(obj.x, obj.y);
+    rotate(obj.rotation);
+    image(vaseImg, 0, 0, obj.width, obj.height);
     pop();
   }
 }
@@ -161,6 +163,7 @@ const vase = {
   endPoint: 0,
   speed: 0,
   img: vaseImg,
+  rotation: 0,
 };
 
 const floor = {
@@ -441,6 +444,7 @@ function draw() {
         if (block.type === "vase") {
           playerScore = countDown;
           playerPosition = checkScore(playerScore);
+          vase.speed = -10;
           gameState = "win";
         }
       } else {
@@ -495,9 +499,24 @@ function draw() {
     // Here's the screen if you win the game
     background("lightgreen");
 
+    for (let block of collisionBlocks) {
+      CollisionBlockSprite(block);
+    }
+
+    for (let obstacle of obstacles) {
+      CollisionBlockSprite(obstacle);
+    }
+
     // resetting cat position
     cat.x = sWidth / 2;
     cat.y = sHeight - 30;
+
+    if (vase.y < sHeight - floor.height) {
+      vase.speed += gravity;
+      vase.x += 5;
+      vase.y += vase.speed;
+      vase.rotation += 0.1;
+    }
 
     textAlign(CENTER);
 
@@ -589,6 +608,12 @@ function keyPressed() {
     startTimeSec = int(millis() / 1000);
     startTimeMil = int(millis() / 100);
     timePenalty = 0;
+
+    //reset vase position
+    vase.x = 800;
+    vase.y = 100;
+    vase.speed = 0;
+    vase.rotation = 0;
   }
   if (keyCode === 90 && cat.state === "stand") {
     cat.downSpeed = cat.jumpHeight * -1;
