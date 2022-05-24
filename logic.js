@@ -177,7 +177,7 @@ let playerPosition;
 const cat = {
   x: sWidth / 2,
   y: sHeight - 30,
-  acceleration: 0.02,
+  acceleration: 0.5,
   jumpHeight: 17,
   downSpeed: 0,
   sideSpeed: 0,
@@ -185,6 +185,7 @@ const cat = {
   invincibility: 0,
   direction: "right",
   runSprite: 1,
+  maxSpeed: 5,
 };
 
 const vase = {
@@ -426,7 +427,10 @@ function draw() {
       // cat.sideSpeed -= cat.acceleration;
 
       //without acceleration
-      cat.sideSpeed = -5;
+      cat.sideSpeed -= cat.acceleration;
+      if (cat.sideSpeed < -cat.maxSpeed) {
+        cat.sideSpeed = -cat.maxSpeed;
+      }
     } // right arrow:
     else if (keyIsDown(39) || keyIsDown(68)) {
       // right arrow:
@@ -437,10 +441,16 @@ function draw() {
       // cat.sideSpeed += cat.acceleration;
 
       //without acceleration
-      cat.sideSpeed = 5;
+      cat.sideSpeed += cat.acceleration;
+      if (cat.sideSpeed > cat.maxSpeed) {
+        cat.sideSpeed = cat.maxSpeed;
+      }
     } // cat's not moving:
     else {
-      cat.sideSpeed = 0;
+      cat.sideSpeed *= 0.8;
+      if (cat.sideSpeed < 0.01 && cat.sideSpeed > -0.01) {
+        cat.sideSpeed = 0;
+      }
     }
 
     //controls collision
@@ -548,9 +558,11 @@ function draw() {
     // controls of moving left and right (looked at garrits lecture "12: Example - Move a car with the keyboard" and took inspiration for this section)
     cat.x = cat.x + cat.sideSpeed;
 
-    // What does this one to?
+    //all the obstacles that move left and right do that with this code
     for (obstacle of obstacles) {
       obstacle.x += obstacle.speed;
+
+      //once it reaches its endpoint, it turns back around, and vice versa
       if (obstacle.x > obstacle.endPoint || obstacle.x < obstacle.startPoint) {
         obstacle.speed *= -1;
       }
