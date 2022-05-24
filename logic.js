@@ -9,6 +9,7 @@ let currentTimeMil = 0;
 let startTimeSec = 0;
 let startTimeMil = 0;
 let vaseImg;
+let brokenVaseImg;
 let vacuumImg;
 let cactusImg;
 let timePenalty = 0;
@@ -16,6 +17,7 @@ let timePenalty = 0;
 function preload() {
     // Loading images
     vaseImg = loadImage("images/vase.png");
+    brokenVaseImg = loadImage("images/broken-vase.png");
     vacuumImg = loadImage("images/vacuum.png");
     cactusImg = loadImage("images/cactus.png");
 
@@ -130,12 +132,20 @@ function CollisionBlockSprite(obj) {
         image(cactusImg, obj.x, obj.y, obj.width, obj.height);
         pop();
     } else if (obj.type === "vase") {
-        push();
-        //fill("green");
-        translate(obj.x, obj.y);
-        rotate(obj.rotation);
-        image(vaseImg, 0, 0, obj.width, obj.height);
-        pop();
+        if (obj.broken) {
+            push();
+            translate(obj.x, obj.y);
+            rotate(obj.rotation);
+            image(brokenVaseImg, 0 - 20, 0 - 50, 870 * 0.2, 347 * 0.2);
+            pop();
+        } else {
+            push();
+            translate(obj.x, obj.y);
+            rotate(obj.rotation);
+            image(vaseImg, 0, 0, obj.width, obj.height);
+            pop();
+        }
+
     }
 }
 
@@ -172,6 +182,7 @@ const vase = {
     endPoint: 0,
     speed: 0,
     rotation: 0,
+    broken: false,
 };
 
 const floor = {
@@ -322,6 +333,10 @@ function draw() {
     } else if (gameState === "play") {
         //here's where we have all the gameplay code
         background("#9FBFD1");
+
+        // Resetting the vase img
+        vase.broken = false;
+
 
         // Testing countdown timer based on this tutorial: https://www.youtube.com/watch?v=rKhwDhp9dcs&ab_channel=flanniganable
 
@@ -531,6 +546,14 @@ function draw() {
             vase.x += 5;
             vase.y += vase.speed;
             vase.rotation += 0.1;
+        } else {
+            vase.rotation = 0;
+            vase.broken = true;
+            console.log("rotation: " + vase.rotation);
+            console.log("vase x: " + vase.x);
+
+
+
         }
 
         textAlign(CENTER);
