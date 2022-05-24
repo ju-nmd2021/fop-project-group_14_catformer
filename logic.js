@@ -171,7 +171,6 @@ const vase = {
     startPoint: 0,
     endPoint: 0,
     speed: 0,
-    img: vaseImg,
     rotation: 0,
 };
 
@@ -257,20 +256,18 @@ const vacuum1 = {
     startPoint: 50,
     endPoint: 250,
     speed: 2,
-    img: vacuumImg,
 };
 
 const cactus1 = {
     x: 800,
-    y: floor.y - 80,
-    width: 50,
-    height: 80,
+    y: floor.y - 180 * 0.9,
+    width: 112 * 0.9,
+    height: 190 * 0.9,
     type: "cactus",
     dangerous: true,
     startPoint: 0,
     endPoint: 0,
     speed: 0,
-    img: vacuumImg,
 };
 
 const collisionBlocks = [
