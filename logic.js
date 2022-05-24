@@ -10,6 +10,8 @@ let startTimeSec = 0;
 let startTimeMil = 0;
 let timePenalty = 0;
 
+let wallColor = "#9FBFD1";
+
 // image variables
 let vaseImg;
 let brokenVaseImg;
@@ -24,7 +26,7 @@ function preload() {
     brokenVaseImg = loadImage("images/broken-vase.png");
     vacuumImg = loadImage("images/vacuum.png");
     cactusImg = loadImage("images/cactus.png");
-    fireplaceImg = loadImage("images/fireplace.png");
+    fireplaceImg = loadImage("images/fireplace-no-books.png");
 
 
 }
@@ -152,7 +154,15 @@ function CollisionBlockSprite(obj) {
             pop();
         }
 
+    } else if (obj.type === "fireplace") {
+        //image(fireplaceImg, sWidth - 300 - (338 / 2), sHeight / 2, 338, 301); // fireplace
+        image(fireplaceImg, obj.x, obj.y, obj.width, obj.height);
+
+
     }
+
+
+
 }
 
 //here's all the variables we set before starting everything
@@ -287,6 +297,17 @@ const cactus1 = {
     speed: 0,
 };
 
+const fireplace1 = {
+    x: sWidth - 280 - (338 / 2),
+    y: sHeight - (241) - floor.height,
+    width: 338,
+    height: 243,
+    type: "fireplace",
+    dangerous: false,
+    //image(fireplaceImg, sWidth - 300 - (338 / 2), sHeight / 2, 338, 301); // fireplace
+
+};
+
 const collisionBlocks = [
     floor,
     shelf1,
@@ -297,6 +318,7 @@ const collisionBlocks = [
     wallLeft,
     wallRight,
     vase,
+    fireplace1
 ];
 
 const obstacles = [vacuum1, cactus1];
@@ -340,8 +362,8 @@ function draw() {
         //here's where we have all the gameplay code
 
         // drawing the room:
-        background("#9FBFD1"); // wallpaper 
-        image(fireplaceImg, sWidth - 300 - (338 / 2), sHeight / 2, 338, 301); // fireplace
+        background(wallColor); // wallpaper 
+        //image(fireplaceImg, sWidth - 300 - (338 / 2), sHeight / 2, 338, 301); // fireplace
 
         // Resetting the vase img
         vase.broken = false;
@@ -536,7 +558,7 @@ function draw() {
         ///// End of play state
     } else if (gameState === "win") {
         // Here's the screen if you win the game
-        background("lightgreen");
+        background(wallColor);
 
         for (let block of collisionBlocks) {
             CollisionBlockSprite(block);
