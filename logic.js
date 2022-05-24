@@ -346,7 +346,7 @@ function draw() {
 
         //game text
         push();
-        gameText = "press R to start playing";
+        gameText = "press ENTER to start playing";
         text(gameText, sWidth / 2, sHeight / 2 + 40);
         pop();
 
@@ -635,7 +635,7 @@ function draw() {
         pop();
 
         pop();
-        text("press R to play again", sWidth / 2, sHeight - 100);
+        text("press ENTER to play again", sWidth / 2, sHeight - 100);
         pop();
         // Show your time
         // Option to Write your name and save it to local storage
@@ -661,7 +661,7 @@ function draw() {
         push();
         gameText = "Gosh darn, the human is back... I have to be faster next time";
         text(gameText, sWidth / 2, sHeight / 5);
-        text("press R to play again", sWidth / 2, sHeight / 4);
+        text("press ENTER to play again", sWidth / 2, sHeight / 4);
         pop();
 
         // Display highscore
@@ -698,9 +698,9 @@ function updateLocalStorage() {
 function keyPressed() {
     console.log(keyCode);
     if (
-        gameState === "start" && keyCode === 82 ||
-        gameState === "win" && keyCode === 82 ||
-        (gameState === "loose" && keyCode === 82)
+        gameState === "start" && keyCode === 13 ||
+        gameState === "win" && keyCode === 13 ||
+        (gameState === "loose" && keyCode === 13)
     ) {
         gameState = "play";
         // startTime checks at what time we pressed the play button. the varieble is used in our countdown timer in our "play" gamestate
