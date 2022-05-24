@@ -152,6 +152,7 @@ function CollisionBlockSprite(obj) {
             rotate(obj.rotation);
             image(vaseImg, 0, 0, obj.width, obj.height);
             pop();
+            console.log("object x: " + obj.x)
         }
 
     } else if (obj.type === "fireplace") {
@@ -247,7 +248,8 @@ const shelf4 = {
 };
 // she shelf that holds the vase
 const shelf5 = {
-    x: vase.x - 200,
+    x: vase.x - 200, // x is based on where the vase is
+    //x: 200, // x is based on where the vase is
     y: vase.y + vase.height,
     width: 300,
     height: 50,
@@ -314,7 +316,7 @@ const collisionBlocks = [
     shelf2,
     shelf3,
     shelf4,
-    shelf5,
+    shelf5, // she shelf that holds the vase
     wallLeft,
     wallRight,
     vase,
