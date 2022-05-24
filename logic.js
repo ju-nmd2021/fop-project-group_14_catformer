@@ -10,6 +10,7 @@ let startTimeSec = 0;
 let startTimeMil = 0;
 let vaseImg;
 let vacuumImg;
+let timePenalty = 0;
 
 function preload() {
   // Loading images
@@ -20,7 +21,7 @@ function preload() {
 //a counter that just counts the passing frames
 let frameCounter = 0;
 
-let sessionScoreBoard = [];
+let sessionScoreBoard;
 
 function setup() {
   createCanvas(sWidth, sHeight);
@@ -30,9 +31,31 @@ function setup() {
 window.addEventListener("load", () => {
   gameState = "start";
 
-  if (localStorage.scoreBoard !== undefined) {
-    sessionScoreBoard = JSON.parse(localStorage.scoreBoard);
+  if (localStorage.scoreBoard === undefined) {
+    localStorage.scoreBoard = JSON.stringify([
+      {
+        name: "Jane",
+        score: 10,
+      },
+      {
+        name: "Jenna",
+        score: 8,
+      },
+      {
+        name: "Jieber",
+        score: 7,
+      },
+      {
+        name: "Justin",
+        score: 4,
+      },
+      {
+        name: "Job",
+        score: 3,
+      },
+    ]);
   }
+  sessionScoreBoard = JSON.parse(localStorage.scoreBoard);
 });
 
 //sprite for our main cat :3
@@ -111,6 +134,8 @@ let gameText;
 
 let gameState = "loading";
 const gravity = 1;
+let playerScore;
+let playerPosition;
 
 const cat = {
   x: sWidth / 2,
@@ -252,9 +277,9 @@ const obstacles = [vacuum1, cactus1];
 
 //The main draw function that is called many times per second
 function draw() {
-  console.log(gameState);
-  console.log(countDown + "cd");
-  console.log(currentTimeSec);
+  // console.log(gameState);
+  // console.log(countDown + "cd");
+  // console.log(currentTimeSec);
   // Different game states
   if (gameState === "loading") {
     //here we could have a loading screen if we want it, but it might be unnecessary
@@ -285,7 +310,7 @@ function draw() {
     currentTimeSec = int(millis() / 1000); // this runs in the background and counts how many seconds has passed
     currentTimeMil = int(millis() / 10); // this runs in the background and counts how many milliseconds has passed
 
-    countDown = timeLimit - (currentTimeSec - startTimeSec);
+    countDown = timeLimit - (currentTimeSec - startTimeSec) - timePenalty;
     let countDownMil = timeLimit - (currentTimeMil - startTimeMil);
 
     if (countDown < 0) {
@@ -306,7 +331,6 @@ function draw() {
     //every 10th frame, the run sprite is activated
     if (frameCounter % 10 === 0) {
       cat.runSprite *= -1;
-      console.log("legs!");
     }
 
     // creating a timer
@@ -415,6 +439,8 @@ function draw() {
 
         // if statement for if the cat has collided with the vase
         if (block.type === "vase") {
+          playerScore = countDown;
+          playerPosition = checkScore(playerScore);
           gameState = "win";
         }
       } else {
@@ -441,6 +467,9 @@ function draw() {
 
         //this makes it so that the cat doesn't get hurt many times in a row
         cat.invincibility = 60;
+
+        //this reduces the timer by 1 as your penalty
+        timePenalty++;
       }
     }
 
@@ -483,7 +512,27 @@ function draw() {
     push();
     gameText = "I AM THE SUPERIOR CAT! SUCK IT, GRAVITY!";
     text(gameText, sWidth / 2, sHeight / 5);
-    text("press R to play again", sWidth / 2, sHeight / 4);
+    push();
+    textSize(20);
+    text(
+      "You completed it with " + playerScore + " seconds left",
+      sWidth / 2,
+      sHeight / 4
+    );
+    if (playerPosition === -1) {
+      text("You didn't get on the leaderboard", sWidth / 2, sHeight / 3);
+    } else {
+      let positionOnLeaderboard = playerPosition + 1;
+      text(
+        "You got position " +
+          positionOnLeaderboard +
+          " on the leaderboard! enter your name in the field below",
+        sWidth / 2,
+        sHeight / 3
+      );
+    }
+    pop();
+    text("press R to play again", sWidth / 2, sHeight / 2);
     pop();
     // Show your time
     // Option to Write your name and save it to local storage
@@ -517,6 +566,17 @@ function draw() {
   }
 }
 
+function checkScore(newScore) {
+  let scoreCheck = -1;
+  for (let i = sessionScoreBoard.length - 1; i >= 0; i--) {
+    let currentPlayer = sessionScoreBoard[i];
+    if (newScore > currentPlayer.score) {
+      scoreCheck = i;
+    }
+  }
+  return scoreCheck;
+}
+
 function keyPressed() {
   console.log(keyCode);
   if (
@@ -528,6 +588,7 @@ function keyPressed() {
     // startTime checks at what time we pressed the play button. the varieble is used in our countdown timer in our "play" gamestate
     startTimeSec = int(millis() / 1000);
     startTimeMil = int(millis() / 100);
+    timePenalty = 0;
   }
   if (keyCode === 90 && cat.state === "stand") {
     cat.downSpeed = cat.jumpHeight * -1;
