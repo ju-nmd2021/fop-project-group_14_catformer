@@ -2,6 +2,11 @@
 const sWidth = 1100;
 const sHeight = 700;
 
+function setup() {
+    createCanvas(sWidth, sHeight);
+}
+
+//time variables
 let timeLimit = 15; // the game time limit
 let countDown; // = time limit - amount of time passed
 let currentTimeSec = 0;
@@ -19,7 +24,6 @@ let vacuumImg;
 let cactusImg;
 let fireplaceImg;
 
-
 function preload() {
     // Loading images
     vaseImg = loadImage("images/vase.png");
@@ -27,24 +31,21 @@ function preload() {
     vacuumImg = loadImage("images/vacuum.png");
     cactusImg = loadImage("images/cactus.png");
     fireplaceImg = loadImage("images/fireplace-no-books.png");
-
-
 }
 
 //a counter that just counts the passing frames
 let frameCounter = 0;
+
+//the input field for the user name
 let userNameElement;
 let sessionScoreBoard;
-
-function setup() {
-    createCanvas(sWidth, sHeight);
-}
 
 //here, we wait until the document has loaded fully before setting the gamestate to start
 window.addEventListener("load", () => {
     userNameElement = document.getElementById("userName");
     gameState = "start";
 
+    //fills the scoreboard with dummy scores if the scoreboard is undefined
     if (localStorage.scoreBoard === undefined) {
         localStorage.scoreBoard = JSON.stringify([{
                 name: "Jane",
@@ -68,6 +69,8 @@ window.addEventListener("load", () => {
             },
         ]);
     }
+
+    //loads the local storage to the session
     sessionScoreBoard = JSON.parse(localStorage.scoreBoard);
 });
 
@@ -81,10 +84,12 @@ function catSprite(obj) {
     // test scale
     scale(1.3);
 
+    //flips the cat depending on direction
     if (cat.direction === "left") {
         scale(-1, 1);
     }
 
+    //if you have invincibility after getting hit, you turn red
     if (cat.invincibility > 0) {
         fill(255, 50, 50);
     }
@@ -114,7 +119,7 @@ function catSprite(obj) {
     pop();
 }
 
-//sprite for the floor
+//sprite for all collision blocks. several if-statements check which type it is
 function CollisionBlockSprite(obj) {
     strokeWeight(0);
     if (obj.type === "floor") {
@@ -152,18 +157,11 @@ function CollisionBlockSprite(obj) {
             rotate(obj.rotation);
             image(vaseImg, 0, 0, obj.width, obj.height);
             pop();
-            console.log("object x: " + obj.x)
         }
-
     } else if (obj.type === "fireplace") {
         //image(fireplaceImg, sWidth - 300 - (338 / 2), sHeight / 2, 338, 301); // fireplace
         image(fireplaceImg, obj.x, obj.y, obj.width, obj.height);
-
-
     }
-
-
-
 }
 
 //here's all the variables we set before starting everything
@@ -246,10 +244,10 @@ const shelf4 = {
     type: "shelf",
     dangerous: false,
 };
+
 // she shelf that holds the vase
 const shelf5 = {
-    x: vase.x - 200, // x is based on where the vase is
-    //x: 200, // x is based on where the vase is
+    x: vase.x - 200,
     y: vase.y + vase.height,
     width: 300,
     height: 50,
@@ -300,14 +298,13 @@ const cactus1 = {
 };
 
 const fireplace1 = {
-    x: sWidth - 280 - (338 / 2),
-    y: sHeight - (241) - floor.height,
+    x: sWidth - 280 - 338 / 2,
+    y: sHeight - 241 - floor.height,
     width: 338,
     height: 243,
     type: "fireplace",
     dangerous: false,
     //image(fireplaceImg, sWidth - 300 - (338 / 2), sHeight / 2, 338, 301); // fireplace
-
 };
 
 const collisionBlocks = [
@@ -323,13 +320,11 @@ const collisionBlocks = [
     fireplace1
 ];
 
+//list of all obstacles
 const obstacles = [vacuum1, cactus1];
 
 //The main draw function that is called many times per second
 function draw() {
-    // console.log(gameState);
-    // console.log(countDown + "cd");
-    // console.log(currentTimeSec);
     // Different game states
     if (gameState === "loading") {
         //here we could have a loading screen if we want it, but it might be unnecessary
@@ -364,12 +359,11 @@ function draw() {
         //here's where we have all the gameplay code
 
         // drawing the room:
-        background(wallColor); // wallpaper 
+        background(wallColor); // wallpaper
         //image(fireplaceImg, sWidth - 300 - (338 / 2), sHeight / 2, 338, 301); // fireplace
 
         // Resetting the vase img
         vase.broken = false;
-
 
         // Testing countdown timer based on this tutorial: https://www.youtube.com/watch?v=rKhwDhp9dcs&ab_channel=flanniganable
 
@@ -379,6 +373,7 @@ function draw() {
         countDown = timeLimit - (currentTimeSec - startTimeSec) - timePenalty;
         let countDownMil = timeLimit - (currentTimeMil - startTimeMil);
 
+        //if counter reaches 0, you've run out of time
         if (countDown < 0) {
             countDown = 0;
             gameState = "loose";
@@ -408,10 +403,12 @@ function draw() {
         text(countDown + ":" + (countDownMil % 100), sWidth - 150, 50);
         pop();
 
+        //draws all collision blocks
         for (let block of collisionBlocks) {
             CollisionBlockSprite(block);
         }
 
+        //draws all the obstacles
         for (let obstacle of obstacles) {
             CollisionBlockSprite(obstacle);
         }
@@ -560,7 +557,7 @@ function draw() {
         ///// End of play state
     } else if (gameState === "win") {
         // Here's the screen if you win the game
-        background(wallColor);
+        background("lightgreen");
 
         for (let block of collisionBlocks) {
             CollisionBlockSprite(block);
@@ -584,9 +581,6 @@ function draw() {
             vase.broken = true;
             console.log("rotation: " + vase.rotation);
             console.log("vase x: " + vase.x);
-
-
-
         }
 
         textAlign(CENTER);
@@ -609,11 +603,15 @@ function draw() {
             sWidth / 2,
             sHeight / 4
         );
+
+        //if you ended up 6th on the scoreboard, you don't get to join
         if (playerPosition === 5) {
             text("You didn't get on the leaderboard", sWidth / 2, sHeight / 3);
         } else if (playerPosition === -1) {
+            //if you didn't write your name, you don't get to join
             text("You didn't enter your name in the field!", sWidth / 2, sHeight / 3);
         } else {
+            //otherwise, you've joined the scoreboard
             let positionOnLeaderboard = playerPosition + 1;
             text(
                 "You got position " + positionOnLeaderboard + " on the leaderboard!",
@@ -622,6 +620,7 @@ function draw() {
             );
         }
 
+        //Loops through all results from the scoreboard and displays them
         push();
         textSize(20);
         let userPosition = 0;
@@ -637,7 +636,7 @@ function draw() {
         pop();
 
         pop();
-        text("press ENTER to play again", sWidth / 2, sHeight - 100);
+        text("press Enter to play again", sWidth / 2, sHeight - 100);
         pop();
         // Show your time
         // Option to Write your name and save it to local storage
@@ -663,7 +662,7 @@ function draw() {
         push();
         gameText = "Gosh darn, the human is back... I have to be faster next time";
         text(gameText, sWidth / 2, sHeight / 5);
-        text("press ENTER to play again", sWidth / 2, sHeight / 4);
+        text("press Enter to play again", sWidth / 2, sHeight / 4);
         pop();
 
         // Display highscore
@@ -671,6 +670,7 @@ function draw() {
     }
 }
 
+//checks whether the new score is good enough to be placed on the scoreboard
 function checkScore(newScore) {
     let scoreCheck = 5;
     for (let i = sessionScoreBoard.length - 1; i >= 0; i--) {
@@ -679,6 +679,7 @@ function checkScore(newScore) {
             scoreCheck = i;
         }
     }
+    //can't join the scoreboard if you never chose a name
     if (userNameElement.value !== "") {
         let newPlacement = {
             name: userNameElement.value,
@@ -690,6 +691,7 @@ function checkScore(newScore) {
     } else {
         scoreCheck = -1;
     }
+    //returns the position that the new score will take
     return scoreCheck;
 }
 
@@ -699,9 +701,10 @@ function updateLocalStorage() {
 
 function keyPressed() {
     console.log(keyCode);
+    //if you press enter, you move between game states
     if (
-        gameState === "start" && keyCode === 13 ||
-        gameState === "win" && keyCode === 13 ||
+        (gameState === "start" && keyCode === 13) ||
+        (gameState === "win" && keyCode === 13) ||
         (gameState === "loose" && keyCode === 13)
     ) {
         gameState = "play";
@@ -709,6 +712,7 @@ function keyPressed() {
         startTimeSec = int(millis() / 1000);
         startTimeMil = int(millis() / 100);
         timePenalty = 0;
+        frameCounter = 0;
 
         //reset vase position
         vase.x = 800;
@@ -716,6 +720,7 @@ function keyPressed() {
         vase.speed = 0;
         vase.rotation = 0;
     }
+    //if the cat is on the ground, it can jump
     if (keyCode === 90 && cat.state === "stand") {
         cat.downSpeed = cat.jumpHeight * -1;
     }
