@@ -15,16 +15,22 @@ let startTimeSec = 0;
 let startTimeMil = 0;
 let timePenalty = 0;
 
-//image variables
+let wallColor = "#9FBFD1";
+
+// image variables
 let vaseImg;
+let brokenVaseImg;
 let vacuumImg;
 let cactusImg;
+let fireplaceImg;
 
 function preload() {
   // Loading images
   vaseImg = loadImage("images/vase.png");
+  brokenVaseImg = loadImage("images/broken-vase.png");
   vacuumImg = loadImage("images/vacuum.png");
   cactusImg = loadImage("images/cactus.png");
+  fireplaceImg = loadImage("images/fireplace-no-books.png");
 }
 
 //a counter that just counts the passing frames
@@ -140,12 +146,22 @@ function CollisionBlockSprite(obj) {
     image(cactusImg, obj.x, obj.y, obj.width, obj.height);
     pop();
   } else if (obj.type === "vase") {
-    push();
-    //fill("green");
-    translate(obj.x, obj.y);
-    rotate(obj.rotation);
-    image(vaseImg, 0, 0, obj.width, obj.height);
-    pop();
+    if (obj.broken) {
+      push();
+      translate(obj.x, obj.y);
+      rotate(obj.rotation);
+      image(brokenVaseImg, 0 - 20, 0 - 50, 870 * 0.2, 347 * 0.2);
+      pop();
+    } else {
+      push();
+      translate(obj.x, obj.y);
+      rotate(obj.rotation);
+      image(vaseImg, 0, 0, obj.width, obj.height);
+      pop();
+    }
+  } else if (obj.type === "fireplace") {
+    //image(fireplaceImg, sWidth - 300 - (338 / 2), sHeight / 2, 338, 301); // fireplace
+    image(fireplaceImg, obj.x, obj.y, obj.width, obj.height);
   }
 }
 
@@ -182,6 +198,7 @@ const vase = {
   endPoint: 0,
   speed: 0,
   rotation: 0,
+  broken: false,
 };
 
 const floor = {
@@ -270,7 +287,7 @@ const vacuum1 = {
 };
 
 const cactus1 = {
-  x: 800,
+  x: 580,
   y: floor.y - 180 * 0.9,
   width: 112 * 0.9,
   height: 190 * 0.9,
@@ -281,7 +298,16 @@ const cactus1 = {
   speed: 0,
 };
 
-//list of all collision blocks
+const fireplace1 = {
+  x: sWidth - 280 - 338 / 2,
+  y: sHeight - 241 - floor.height,
+  width: 338,
+  height: 243,
+  type: "fireplace",
+  dangerous: false,
+  //image(fireplaceImg, sWidth - 300 - (338 / 2), sHeight / 2, 338, 301); // fireplace
+};
+
 const collisionBlocks = [
   floor,
   shelf1,
@@ -292,6 +318,7 @@ const collisionBlocks = [
   wallLeft,
   wallRight,
   vase,
+  fireplace1,
 ];
 
 //list of all obstacles
@@ -321,7 +348,6 @@ function draw() {
     text(gameText, sWidth / 2, sHeight / 2 + 40);
     pop();
 
-    //the player needs to input a name to end up on the scoreboard
     push();
     textSize(20);
     text(
@@ -332,7 +358,13 @@ function draw() {
     pop();
   } else if (gameState === "play") {
     //here's where we have all the gameplay code
-    background("#9FBFD1");
+
+    // drawing the room:
+    background(wallColor); // wallpaper
+    //image(fireplaceImg, sWidth - 300 - (338 / 2), sHeight / 2, 338, 301); // fireplace
+
+    // Resetting the vase img
+    vase.broken = false;
 
     // Testing countdown timer based on this tutorial: https://www.youtube.com/watch?v=rKhwDhp9dcs&ab_channel=flanniganable
 
