@@ -20,7 +20,7 @@ function preload() {
 
 //a counter that just counts the passing frames
 let frameCounter = 0;
-
+let userNameElement;
 let sessionScoreBoard;
 
 function setup() {
@@ -29,6 +29,7 @@ function setup() {
 
 //here, we wait until the document has loaded fully before setting the gamestate to start
 window.addEventListener("load", () => {
+  userNameElement = document.getElementById("userName");
   gameState = "start";
 
   if (localStorage.scoreBoard === undefined) {
@@ -114,11 +115,17 @@ function CollisionBlockSprite(obj) {
     fill(200, 120, 50);
     rect(obj.x, obj.y, obj.width, obj.height);
     pop();
-  } else if (obj.type === "obstacle") {
+  } else if (obj.type === "vacuum") {
     push();
     fill(200, 50, 50);
     //rect(obj.x, obj.y, obj.width, obj.height);
     image(vacuumImg, obj.x, obj.y, obj.width, obj.height);
+    pop();
+  } else if (obj.type === "cactus") {
+    push();
+    fill(200, 50, 50);
+    //rect(obj.x, obj.y, obj.width, obj.height);
+    image(vaseImg, obj.x, obj.y, obj.width, obj.height);
     pop();
   } else if (obj.type === "vase") {
     push();
@@ -243,7 +250,7 @@ const vacuum1 = {
   y: sHeight - 80,
   width: 80,
   height: 30,
-  type: "obstacle",
+  type: "vacuum",
   dangerous: true,
   startPoint: 50,
   endPoint: 250,
@@ -256,7 +263,7 @@ const cactus1 = {
   y: floor.y - 80,
   width: 50,
   height: 80,
-  type: "obstacle",
+  type: "cactus",
   dangerous: true,
   startPoint: 0,
   endPoint: 0,
@@ -303,6 +310,15 @@ function draw() {
     push();
     gameText = "press R to start playing";
     text(gameText, sWidth / 2, sHeight / 2 + 40);
+    pop();
+
+    push();
+    textSize(20);
+    text(
+      "Make sure to enter your name in the field below to save your score later!",
+      sWidth / 2,
+      sHeight / 2 + 80
+    );
     pop();
   } else if (gameState === "play") {
     //here's where we have all the gameplay code
@@ -538,20 +554,35 @@ function draw() {
       sWidth / 2,
       sHeight / 4
     );
-    if (playerPosition === -1) {
+    if (playerPosition === 5) {
       text("You didn't get on the leaderboard", sWidth / 2, sHeight / 3);
+    } else if (playerPosition === -1) {
+      text("You didn't enter your name in the field!", sWidth / 2, sHeight / 3);
     } else {
       let positionOnLeaderboard = playerPosition + 1;
       text(
-        "You got position " +
-          positionOnLeaderboard +
-          " on the leaderboard! enter your name in the field below",
+        "You got position " + positionOnLeaderboard + " on the leaderboard!",
         sWidth / 2,
         sHeight / 3
       );
     }
+
+    push();
+    textSize(20);
+    let userPosition = 0;
+    for (let index in sessionScoreBoard) {
+      let player = sessionScoreBoard[index];
+      userPosition++;
+      text(
+        userPosition + ". " + player.name + ": " + player.score + "s",
+        sWidth / 2,
+        sHeight / 2 + index * 20
+      );
+    }
     pop();
-    text("press R to play again", sWidth / 2, sHeight / 2);
+
+    pop();
+    text("press R to play again", sWidth / 2, sHeight - 100);
     pop();
     // Show your time
     // Option to Write your name and save it to local storage
@@ -586,14 +617,29 @@ function draw() {
 }
 
 function checkScore(newScore) {
-  let scoreCheck = -1;
+  let scoreCheck = 5;
   for (let i = sessionScoreBoard.length - 1; i >= 0; i--) {
     let currentPlayer = sessionScoreBoard[i];
     if (newScore > currentPlayer.score) {
       scoreCheck = i;
     }
   }
+  if (userNameElement.value !== "") {
+    let newPlacement = {
+      name: userNameElement.value,
+      score: newScore,
+    };
+    sessionScoreBoard.splice(scoreCheck, 0, newPlacement);
+    sessionScoreBoard.splice(5, 1);
+    updateLocalStorage();
+  } else {
+    scoreCheck = -1;
+  }
   return scoreCheck;
+}
+
+function updateLocalStorage() {
+  localStorage.scoreBoard = JSON.stringify(sessionScoreBoard);
 }
 
 function keyPressed() {
