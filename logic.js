@@ -131,7 +131,7 @@ function CollisionBlockSprite(obj) {
   strokeWeight(0);
   if (obj.type === "floor") {
     push();
-    fill(150, 80, 50);
+    fill("#C7B299");
     rect(obj.x, obj.y, obj.width, obj.height);
     pop();
   } else if (obj.type === "wall") {
@@ -142,8 +142,8 @@ function CollisionBlockSprite(obj) {
     pop();
   } else if (obj.type === "shelf") {
     push();
-    fill(200, 120, 50);
-    rect(obj.x, obj.y, obj.width, obj.height);
+    fill("#534741");
+    rect(obj.x, obj.y, obj.width, obj.height, 50);
     pop();
   } else if (obj.type === "vacuum") {
     push();
@@ -426,26 +426,57 @@ function draw() {
     background(250, 230, 150);
     textAlign(CENTER);
 
-    //headline
+    // Game title
     push();
-    textSize(50);
+    textSize(110);
     textFont("Exo");
-    text("CATFORMER", sWidth / 2, sHeight / 2);
+    text("CATFORMER", sWidth / 2, sHeight / 3);
     pop();
 
-    //game text
-    push();
-    gameText = "press ENTER to start playing";
-    text(gameText, sWidth / 2, sHeight / 2 + 40);
-    pop();
-
+    // Intro text
     push();
     textSize(20);
     text(
-      "Make sure to enter your name in the field below to save your score later!",
+      "Cats love mischief, this is known. In Catformer, your mission is to get to the ",
       sWidth / 2,
-      sHeight / 2 + 80
+      280
     );
+    text(
+      "oh so fragile vase and knock it down before your human comes back.",
+      sWidth / 2,
+      300
+    );
+
+    // "Enter name" headline
+    push();
+    textSize(30);
+    textFont("Exo");
+    text("Wait! Want a chance on the scoreboard?", sWidth / 2, 500);
+    pop();
+
+    // "Enter name" text
+    push();
+    textSize(20);
+    text(
+      "Make sure to enter your name in the field below before you start to save your score!",
+      sWidth / 2,
+      530
+    );
+    pop();
+
+    // Instruction headline
+    push();
+    textSize(30);
+    textFont("Exo");
+    text("How to play", sWidth / 2, 370);
+    pop();
+
+    // Intruction text
+    text("Use the arrow keys and Z to jump", sWidth / 2, 410);
+
+    // Play text
+    gameText = "press ENTER to start playing";
+    text(gameText, sWidth / 2, 440);
     pop();
   } else if (gameState === "play") {
     //here's where we have all the gameplay code
@@ -499,7 +530,7 @@ function draw() {
     // Semi transparent bg:
     push();
     rectMode(CENTER);
-    fill("rgba(0, 0, 0, 0.5)");
+    fill("rgba(0, 92, 0, 0.55)");
     rect(sWidth / 2, sHeight / 2, sWidth, sHeight);
     pop();
 
@@ -510,13 +541,13 @@ function draw() {
     push();
     textSize(50);
     textFont("Exo");
-    text("VICTORY", sWidth / 2, 100);
+    text("VICTORY", sWidth / 2, 140);
     pop();
 
     //game text
     textSize(20);
     gameText = '"I AM THE SUPERIOR CAT!"';
-    text(gameText, sWidth / 2, sHeight / 5);
+    text(gameText, sWidth / 2, 180);
 
     //score text
     text(
@@ -524,7 +555,7 @@ function draw() {
         (timeLimit - playerScore) +
         " seconds!",
       sWidth / 2,
-      220
+      240
     );
 
     //Tells the player what results they got and if they got on the scoreboard
@@ -534,7 +565,7 @@ function draw() {
     push();
     textSize(30);
     textFont("Exo");
-    text("Scoreboard", sWidth / 2, 320);
+    text("Scoreboard", sWidth / 2, 340);
     pop();
 
     //Loops through all results from the scoreboard and displays them
@@ -841,17 +872,17 @@ function checkScore(newScore) {
 
 function displayPlayerResult() {
   if (playerPosition === 5) {
-    text("You didn't get on the leaderboard", sWidth / 2, 250);
+    text("You didn't get on the leaderboard", sWidth / 2, 270);
   } else if (playerPosition === -1) {
     //if you didn't write your name, you don't get to join
-    text("Oh no... You didn't enter your name in the field", sWidth / 2, 250);
+    text("Oh no... You didn't enter your name in the field", sWidth / 2, 270);
   } else {
     //otherwise, you've joined the scoreboard
     let positionOnLeaderboard = playerPosition + 1;
     text(
       "You got position " + positionOnLeaderboard + " on the leaderboard",
       sWidth / 2,
-      250
+      270
     );
   }
 }
@@ -878,7 +909,7 @@ function displayScoreboard() {
         (timeLimit - player.score) +
         "s",
       sWidth / 2 - 60,
-      sHeight / 2 + index * 20
+      sHeight / 2 + index * 20 + 20
     );
   }
   pop();
