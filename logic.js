@@ -89,7 +89,7 @@ function catSprite(obj) {
 
   translate(obj.x, obj.y);
   // test scale
-  scale(1.3);
+  scale(1.6);
 
   //flips the cat depending on direction
   if (cat.direction === "left") {
