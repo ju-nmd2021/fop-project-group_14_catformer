@@ -464,6 +464,10 @@ function draw() {
     //collision with things that hurt you
     catDetectDamage();
 
+    if (cat.downSpeed > 20) {
+      cat.downSpeed = 20;
+    }
+
     cat.y += cat.downSpeed;
     // controls of moving left and right (looked at garrits lecture "12: Example - Move a car with the keyboard" and took inspiration for this section)
     cat.x = cat.x + cat.sideSpeed;
