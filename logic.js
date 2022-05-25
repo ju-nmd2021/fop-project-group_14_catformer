@@ -7,7 +7,7 @@ function setup() {
 }
 
 //time variables
-let timeLimit = 1500; // the game time limit
+let timeLimit = 25; // the game time limit
 let countDown; // = time limit - amount of time passed
 let currentTimeSec = 0;
 let currentTimeMil = 0;
@@ -134,6 +134,12 @@ function CollisionBlockSprite(obj) {
     fill(150, 80, 50);
     rect(obj.x, obj.y, obj.width, obj.height);
     pop();
+  } else if (obj.type === "wall") {
+    push();
+    noFill();
+    //fill(150, 80, 50);
+    rect(obj.x, obj.y, obj.width, obj.height);
+    pop();
   } else if (obj.type === "shelf") {
     push();
     fill(200, 120, 50);
@@ -238,7 +244,7 @@ const wallLeft = {
   y: 0,
   width: 50,
   height: sHeight - floor.height,
-  type: "floor",
+  type: "wall",
   dangerous: false,
 };
 
@@ -247,14 +253,14 @@ const wallRight = {
   y: 0,
   width: 50,
   height: sHeight - floor.height,
-  type: "floor",
+  type: "wall",
   dangerous: false,
 };
 
 const shelf1 = {
-  x: wallLeft.width,
+  x: 0,
   y: 275,
-  width: 50,
+  width: 100,
   height: 30,
   type: "shelf",
   dangerous: false,
@@ -530,7 +536,7 @@ function draw() {
     textAlign(CENTER);
 
     // resetting cat position
-    cat.x = sWidth / 2;
+    cat.x = 100;
     cat.y = sHeight - 30;
 
     //headline
