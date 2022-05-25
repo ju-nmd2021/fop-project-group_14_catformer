@@ -16,6 +16,8 @@ let startTimeMil = 0;
 let timePenalty = 0;
 
 let wallColor = "#9FBFD1";
+let vaseX = 340;
+let vaseY = 100;
 
 // image variables
 let vaseImg;
@@ -150,13 +152,19 @@ function CollisionBlockSprite(obj) {
       push();
       translate(obj.x, obj.y);
       rotate(obj.rotation);
-      image(brokenVaseImg, 0 - 20, 0 - 50, 870 * 0.2, 347 * 0.2);
+      //   image(brokenVaseImg, obj.x - 20, obj.y - 50, 870 * 0.2, 347 * 0.2);
+      image(brokenVaseImg, 0, -50, 870 * 0.2, 347 * 0.2);
       pop();
     } else {
       push();
       translate(obj.x, obj.y);
       rotate(obj.rotation);
+      //image(vaseImg, obj.x, obj.y, obj.width, obj.height);
       image(vaseImg, 0, 0, obj.width, obj.height);
+      console.log("vase x: " + obj.x);
+      console.log("vase y: " + obj.y);
+      console.log("vase height: " + obj.height);
+
       pop();
     }
   } else if (obj.type === "fireplace") {
@@ -194,8 +202,8 @@ const cat = {
 };
 
 const vase = {
-  x: 800,
-  y: 100,
+  x: vaseX,
+  y: vaseY,
   width: 96,
   height: 120,
   type: "vase",
@@ -595,12 +603,12 @@ function draw() {
       CollisionBlockSprite(block);
     }
 
-    for (let block of collisionBlocks) {
-      CollisionBlockSprite(block);
-    }
-
     for (let obstacle of obstacles) {
       CollisionBlockSprite(obstacle);
+    }
+
+    for (let block of collisionBlocks) {
+      CollisionBlockSprite(block);
     }
 
     // resetting cat position
@@ -752,8 +760,8 @@ function keyPressed() {
     frameCounter = 0;
 
     //reset vase position
-    vase.x = 800;
-    vase.y = 100;
+    vase.x = vaseX;
+    vase.y = vaseY;
     vase.speed = 0;
     vase.rotation = 0;
   }
