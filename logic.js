@@ -309,6 +309,7 @@ const fireplace1 = {
   //image(fireplaceImg, sWidth - 300 - (338 / 2), sHeight / 2, 338, 301); // fireplace
 };
 
+// list of all collision blocks
 const collisionBlocks = [
   floor,
   shelf1,
@@ -319,8 +320,9 @@ const collisionBlocks = [
   wallLeft,
   wallRight,
   vase,
-  fireplace1,
 ];
+//list of all NON collision blocks
+const nonCollisionBlocks = [fireplace1];
 
 //list of all obstacles
 const obstacles = [vacuum1, cactus1];
@@ -407,6 +409,11 @@ function draw() {
 
     //draws all collision blocks
     for (let block of collisionBlocks) {
+      CollisionBlockSprite(block);
+    }
+
+    //draws all NON collision blocks
+    for (let block of nonCollisionBlocks) {
       CollisionBlockSprite(block);
     }
 
