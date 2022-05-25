@@ -7,7 +7,7 @@ function setup() {
 }
 
 //time variables
-let timeLimit = 15; // the game time limit
+let timeLimit = 1500; // the game time limit
 let countDown; // = time limit - amount of time passed
 let currentTimeSec = 0;
 let currentTimeMil = 0;
@@ -16,8 +16,8 @@ let startTimeMil = 0;
 let timePenalty = 0;
 
 let wallColor = "#9FBFD1";
-let vaseX = 340;
-let vaseY = 100;
+let vaseX = 600;
+let vaseY = 50;
 
 // image variables
 let vaseImg;
@@ -25,6 +25,8 @@ let brokenVaseImg;
 let vacuumImg;
 let cactusImg;
 let fireplaceImg;
+let stoolImg;
+let windowImg;
 
 function preload() {
   // Loading images
@@ -33,6 +35,8 @@ function preload() {
   vacuumImg = loadImage("images/vacuum.png");
   cactusImg = loadImage("images/cactus.png");
   fireplaceImg = loadImage("images/fireplace.png");
+  stoolImg = loadImage("images/stool.png");
+  windowImg = loadImage("images/window.png");
 }
 
 //a counter that just counts the passing frames
@@ -170,9 +174,14 @@ function CollisionBlockSprite(obj) {
   } else if (obj.type === "fireplace") {
     //image(fireplaceImg, sWidth - 300 - (338 / 2), sHeight / 2, 338, 301); // fireplace
     image(fireplaceImg, obj.x, obj.y, obj.width, obj.height);
+  } else if (obj.type === "stool") {
+    image(stoolImg, obj.x, obj.y, obj.width, obj.height);
+  } else if (obj.type === "window") {
+    image(windowImg, obj.x, obj.y, obj.width, obj.height);
   } else if (obj.type === "hiddenSurface") {
     push();
     noFill();
+    //fill("green");
     rect(obj.x, obj.y, obj.width, obj.height);
     pop();
   }
@@ -224,11 +233,29 @@ const floor = {
   dangerous: false,
 };
 
+const wallLeft = {
+  x: 0,
+  y: 0,
+  width: 50,
+  height: sHeight - floor.height,
+  type: "floor",
+  dangerous: false,
+};
+
+const wallRight = {
+  x: sWidth - 50,
+  y: 0,
+  width: 50,
+  height: sHeight - floor.height,
+  type: "floor",
+  dangerous: false,
+};
+
 const shelf1 = {
-  x: 500,
-  y: floor.y - 100,
-  width: 100,
-  height: 50,
+  x: wallLeft.width,
+  y: 275,
+  width: 50,
+  height: 30,
   type: "shelf",
   dangerous: false,
 };
@@ -252,39 +279,22 @@ const shelf3 = {
 };
 
 const shelf4 = {
-  x: sWidth / 2 - 100,
-  y: floor.y - 350,
-  width: 200,
-  height: 50,
+  // the shelf that holds the cactus
+  x: sWidth / 2 - 40,
+  y: floor.y - 300,
+  width: 300,
+  height: 30,
   type: "shelf",
   dangerous: false,
 };
 
 // she shelf that holds the vase
 const shelf5 = {
-  x: vase.x - 200,
+  x: vase.x - 60,
   y: vase.y + vase.height,
-  width: 300,
-  height: 50,
+  width: 140,
+  height: 30,
   type: "shelf",
-  dangerous: false,
-};
-
-const wallLeft = {
-  x: 0,
-  y: 0,
-  width: 50,
-  height: sHeight - floor.height,
-  type: "floor",
-  dangerous: false,
-};
-
-const wallRight = {
-  x: sWidth - 50,
-  y: 0,
-  width: 50,
-  height: sHeight - floor.height,
-  type: "floor",
   dangerous: false,
 };
 
@@ -301,10 +311,10 @@ const vacuum1 = {
 };
 
 const cactus1 = {
-  x: 580,
-  y: floor.y - 180 * 0.9,
-  width: 112 * 0.9,
-  height: 190 * 0.9,
+  x: 680,
+  y: shelf4.y - 180 * 0.5,
+  width: 112 * 0.5,
+  height: 190 * 0.5,
   type: "cactus",
   dangerous: true,
   startPoint: 0,
@@ -312,39 +322,87 @@ const cactus1 = {
   speed: 0,
 };
 
+const stool = {
+  x: 600,
+  y: sHeight - floor.height - 70,
+  width: 116,
+  height: 80,
+  type: "stool",
+  dangerous: false,
+};
+
+const stoolSurface = {
+  x: stool.x,
+  y: stool.y,
+  width: stool.width,
+  height: 20,
+  type: "hiddenSurface",
+  dangerous: false,
+};
+
+const window1 = {
+  x: wallLeft.width + 80,
+  y: 150,
+  width: 333 * 0.85,
+  height: 382 * 0.85,
+  type: "window",
+  dangerous: false,
+};
+
+const windowSurfaceBottom = {
+  x: window1.x,
+  y: window1.y + window1.height - 80,
+  width: window1.width,
+  height: 50,
+  type: "hiddenSurface",
+  dangerous: false,
+};
+const windowSurfaceTop = {
+  x: window1.x,
+  y: window1.y,
+  width: window1.width,
+  height: 20,
+  type: "hiddenSurface",
+  dangerous: false,
+};
+
 const fireplace1 = {
-  x: sWidth - 280 - 338 / 2,
-  y: sHeight - 300 - floor.height,
-  width: 338,
-  height: 301,
+  //x: sWidth - 280 - 338 / 2,
+  x: 750,
+  y: sHeight - 300 * 0.8 - floor.height,
+  width: 338 * 0.8,
+  height: 301 * 0.8,
   type: "fireplace",
   dangerous: false,
 };
 
 const fireplaceSurface = {
-  x: sWidth - 280 - 338 / 2,
-  y: sHeight - 238 - floor.height,
-  width: 338,
+  x: fireplace1.x,
+  y: fireplace1.y + 52,
+  //y: sHeight - 238 - floor.height,
+  width: fireplace1.width,
   height: 30,
   type: "hiddenSurface",
   dangerous: false,
 };
 
 // list of all collision blocks
+// TEST, taking our self 2 / 3
 const collisionBlocks = [
   floor,
   shelf1,
-  shelf2,
-  shelf3,
-  shelf4,
-  shelf5, // she shelf that holds the vase
+  shelf4, // the shelf that holds the cactus
+  shelf5, // the shelf that holds the vase
   wallLeft,
   wallRight,
   vase,
   fireplaceSurface,
+  windowSurfaceBottom,
+  windowSurfaceTop,
+  stoolSurface,
 ];
 //list of all NON collision blocks
-const nonCollisionBlocks = [fireplace1];
+const nonCollisionBlocks = [fireplace1, window1, stool];
 
 //list of all obstacles
 const obstacles = [vacuum1, cactus1];
