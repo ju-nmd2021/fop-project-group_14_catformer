@@ -163,7 +163,7 @@ function CollisionBlockSprite(obj) {
       translate(obj.x, obj.y);
       rotate(obj.rotation);
       //   image(brokenVaseImg, obj.x - 20, obj.y - 50, 870 * 0.2, 347 * 0.2);
-      image(brokenVaseImg, 0, -50, 870 * 0.2, 347 * 0.2);
+      image(brokenVaseImg, -170, -50, 870 * 0.2, 347 * 0.2);
       pop();
     } else {
       push();
@@ -258,6 +258,7 @@ const wallRight = {
 };
 
 const shelf1 = {
+  // shelf by the window
   x: 0,
   y: 275,
   width: 100,
@@ -267,6 +268,7 @@ const shelf1 = {
 };
 
 const shelf2 = {
+  // not being used at the moment
   x: 380,
   y: floor.y - 200,
   width: 100,
@@ -276,6 +278,7 @@ const shelf2 = {
 };
 
 const shelf3 = {
+  // not being used at the moment
   x: 340,
   y: floor.y - 300,
   width: 50,
@@ -294,8 +297,8 @@ const shelf4 = {
   dangerous: false,
 };
 
-// she shelf that holds the vase
 const shelf5 = {
+  // she shelf that holds the vase
   x: vase.x - 60,
   y: vase.y + vase.height,
   width: 140,
@@ -373,7 +376,6 @@ const windowSurfaceTop = {
 };
 
 const fireplace1 = {
-  //x: sWidth - 280 - 338 / 2,
   x: 750,
   y: sHeight - 300 * 0.8 - floor.height,
   width: 338 * 0.8,
@@ -494,6 +496,14 @@ function draw() {
     //throws the vase off of the shelf
     vaseMovement();
 
+    // Semi transparent bg:
+    push();
+    rectMode(CENTER);
+    fill("rgba(0, 0, 0, 0.5)");
+    rect(sWidth / 2, sHeight / 2, sWidth, sHeight);
+    pop();
+
+    fill("#fff");
     textAlign(CENTER);
 
     //headline
@@ -504,35 +514,54 @@ function draw() {
     pop();
 
     //game text
-    push();
-    gameText = "I AM THE SUPERIOR CAT! SUCK IT, GRAVITY!";
+    textSize(20);
+    gameText = '"I AM THE SUPERIOR CAT!"';
     text(gameText, sWidth / 2, sHeight / 5);
 
     //score text
-    push();
-    textSize(20);
     text(
-      "You completed it with " + playerScore + " seconds left",
+      "Impressive, you broke the vase in " +
+        (timeLimit - playerScore) +
+        " seconds!",
       sWidth / 2,
-      sHeight / 4
+      220
     );
 
     //Tells the player what results they got and if they got on the scoreboard
     displayPlayerResult();
 
+    //scoreboard headline
+    push();
+    textSize(30);
+    textFont("Exo");
+    text("Scoreboard", sWidth / 2, 320);
+    pop();
+
     //Loops through all results from the scoreboard and displays them
     displayScoreboard();
 
+    // Replay text
+    push();
+    textSize(14);
+    text("Press ENTER to play again", sWidth / 2, sHeight / 1.4);
     pop();
-    text("press Enter to play again", sWidth / 2, sHeight - 100);
-    pop();
-    // Show your time
-    // Option to Write your name and save it to local storage
-    // Display highscore
-    // Replay button
   } else if (gameState === "loose") {
     // Here's the screen if you loose the game
-    background("red");
+    background(wallColor);
+    renderAllSprites();
+
+    // resetting cat position
+    cat.x = 100;
+    cat.y = sHeight - 30;
+
+    // Semi transparent bg:
+    push();
+    rectMode(CENTER);
+    fill("rgba(153, 0, 0, 0.64)");
+    rect(sWidth / 2, sHeight / 2, sWidth, sHeight);
+    pop();
+
+    fill("#fff");
     textAlign(CENTER);
 
     // resetting cat position
@@ -543,16 +572,20 @@ function draw() {
     push();
     textSize(50);
     textFont("Exo");
-    text("GAME OVER", sWidth / 2, 100);
+    text("GAME OVER", sWidth / 2, sHeight / 2 - 40);
     pop();
 
     //game text
-    push();
-    gameText = "Gosh darn, the human is back... I have to be faster next time";
-    text(gameText, sWidth / 2, sHeight / 5);
-    text("press Enter to play again", sWidth / 2, sHeight / 4);
-    pop();
+    textSize(20);
+    gameText =
+      '"Gosh darn, the human is back... I have to be faster next time"';
+    text(gameText, sWidth / 2, sHeight / 2);
 
+    // Replay text
+    push();
+    textSize(14);
+    text("Press ENTER to play again", sWidth / 2, sHeight / 1.8);
+    pop();
     // Display highscore
     // Replay button
   }
@@ -808,31 +841,43 @@ function checkScore(newScore) {
 
 function displayPlayerResult() {
   if (playerPosition === 5) {
-    text("You didn't get on the leaderboard", sWidth / 2, sHeight / 3);
+    text("You didn't get on the leaderboard", sWidth / 2, 250);
   } else if (playerPosition === -1) {
     //if you didn't write your name, you don't get to join
-    text("You didn't enter your name in the field!", sWidth / 2, sHeight / 3);
+    text("Oh no... You didn't enter your name in the field", sWidth / 2, 250);
   } else {
     //otherwise, you've joined the scoreboard
     let positionOnLeaderboard = playerPosition + 1;
     text(
-      "You got position " + positionOnLeaderboard + " on the leaderboard!",
+      "You got position " + positionOnLeaderboard + " on the leaderboard",
       sWidth / 2,
-      sHeight / 3
+      250
     );
   }
 }
 
 function displayScoreboard() {
   push();
+  textAlign(LEFT);
   textSize(20);
   let userPosition = 0;
   for (let index in sessionScoreBoard) {
     let player = sessionScoreBoard[index];
     userPosition++;
+    /*     text(
+      userPosition + ". " + player.name + ": " + player.score + "s left",
+      sWidth / 2 - 60,
+      sHeight / 2 + index * 20
+    ); */
+
     text(
-      userPosition + ". " + player.name + ": " + player.score + "s",
-      sWidth / 2,
+      userPosition +
+        ". " +
+        player.name +
+        ": " +
+        (timeLimit - player.score) +
+        "s",
+      sWidth / 2 - 60,
       sHeight / 2 + index * 20
     );
   }
