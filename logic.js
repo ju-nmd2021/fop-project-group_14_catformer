@@ -30,7 +30,7 @@ function preload() {
   brokenVaseImg = loadImage("images/broken-vase.png");
   vacuumImg = loadImage("images/vacuum.png");
   cactusImg = loadImage("images/cactus.png");
-  fireplaceImg = loadImage("images/fireplace-no-books.png");
+  fireplaceImg = loadImage("images/fireplace.png");
 }
 
 //a counter that just counts the passing frames
@@ -162,6 +162,11 @@ function CollisionBlockSprite(obj) {
   } else if (obj.type === "fireplace") {
     //image(fireplaceImg, sWidth - 300 - (338 / 2), sHeight / 2, 338, 301); // fireplace
     image(fireplaceImg, obj.x, obj.y, obj.width, obj.height);
+  } else if (obj.type === "hiddenSurface") {
+    push();
+    noFill();
+    rect(obj.x, obj.y, obj.width, obj.height);
+    pop();
   }
 }
 
@@ -301,12 +306,20 @@ const cactus1 = {
 
 const fireplace1 = {
   x: sWidth - 280 - 338 / 2,
-  y: sHeight - 241 - floor.height,
+  y: sHeight - 300 - floor.height,
   width: 338,
-  height: 243,
+  height: 301,
   type: "fireplace",
   dangerous: false,
-  //image(fireplaceImg, sWidth - 300 - (338 / 2), sHeight / 2, 338, 301); // fireplace
+};
+
+const fireplaceSurface = {
+  x: sWidth - 280 - 338 / 2,
+  y: sHeight - 238 - floor.height,
+  width: 338,
+  height: 30,
+  type: "hiddenSurface",
+  dangerous: false,
 };
 
 // list of all collision blocks
@@ -320,6 +333,7 @@ const collisionBlocks = [
   wallLeft,
   wallRight,
   vase,
+  fireplaceSurface,
 ];
 //list of all NON collision blocks
 const nonCollisionBlocks = [fireplace1];
@@ -575,7 +589,11 @@ function draw() {
     ///// End of play state
   } else if (gameState === "win") {
     // Here's the screen if you win the game
-    background("lightgreen");
+    background(wallColor);
+
+    for (let block of nonCollisionBlocks) {
+      CollisionBlockSprite(block);
+    }
 
     for (let block of collisionBlocks) {
       CollisionBlockSprite(block);
