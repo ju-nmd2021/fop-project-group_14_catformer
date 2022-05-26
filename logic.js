@@ -1,12 +1,13 @@
-//here's our one source of truth for the canvas width and height
+// Here's our one source of truth for the canvas width and height
 const sWidth = 1100;
 const sHeight = 700;
 
+// Setting up the canvas:
 function setup() {
   createCanvas(sWidth, sHeight);
 }
 
-//time variables
+// Time variables:
 let timeLimit = 25; // the game time limit
 let countDown; // = time limit - amount of time passed
 let currentTimeSec = 0;
@@ -15,11 +16,7 @@ let startTimeSec = 0;
 let startTimeMil = 0;
 let timePenalty = 0;
 
-let wallColor = "#9FBFD1";
-let vaseX = 600;
-let vaseY = 50;
-
-// image variables
+// Image variables:
 let vaseImg;
 let brokenVaseImg;
 let vacuumImg;
@@ -30,8 +27,25 @@ let stoolImg;
 let windowImg;
 let bgImg;
 let lampImg;
+
+//here's all the variables we set before starting everything
+let mainTitleElement;
+let gameText;
+let gameState = "loading";
+const gravity = 1;
+let playerScore;
+let playerPosition;
+
+// Other variables:
+let wallColor = "#9FBFD1";
+let vaseX = 600;
+let vaseY = 50;
+let frameCounter = 0; //a counter that just counts the passing frames
+let userNameElement; //the input field for the user name
+let sessionScoreBoard;
+
+// Loading images:
 function preload() {
-  // Loading images
   vaseImg = loadImage("images/vase.png");
   brokenVaseImg = loadImage("images/broken-vase.png");
   vacuumImg = loadImage("images/vacuum.png");
@@ -44,19 +58,12 @@ function preload() {
   lampImg = loadImage("images/lamp.png");
 }
 
-//a counter that just counts the passing frames
-let frameCounter = 0;
-
-//thfloore input field for the user name
-let userNameElement;
-let sessionScoreBoard;
-
 //here, we wait until the document has loaded fully before setting the gamestate to start
 window.addEventListener("load", () => {
   userNameElement = document.getElementById("userName");
   gameState = "start";
 
-  //fills the scoreboard with dummy scores if the scoreboard is undefined
+  // fills the scoreboard with dummy scores if the scoreboard is undefined
   if (localStorage.scoreBoard === undefined) {
     localStorage.scoreBoard = JSON.stringify([
       {
@@ -93,7 +100,6 @@ function catSprite(obj) {
   fill(0, 0, 0);
 
   translate(obj.x, obj.y);
-  // test scale
   scale(1.6);
 
   //flips the cat depending on direction
@@ -106,6 +112,7 @@ function catSprite(obj) {
     fill(255, 50, 50);
   }
 
+  // drawing the cat:
   rect(-20, -25, 40, 20); //body
   rect(7, -30, 20, 20); //head
   triangle(7, -29, 7, -35, 14, -29);
@@ -131,19 +138,17 @@ function catSprite(obj) {
   pop();
 }
 
-//sprite for all collision blocks. several if-statements check which type it is
+// sprite for all collision blocks. several if-statements check which type it is
 function CollisionBlockSprite(obj) {
   strokeWeight(0);
   if (obj.type === "floor") {
     push();
-    //fill("#C7B299");
     noFill();
     rect(obj.x, obj.y, obj.width, obj.height);
     pop();
   } else if (obj.type === "wall") {
     push();
     noFill();
-    //fill(150, 80, 50);
     rect(obj.x, obj.y, obj.width, obj.height);
     pop();
   } else if (obj.type === "shelf") {
@@ -154,13 +159,11 @@ function CollisionBlockSprite(obj) {
   } else if (obj.type === "vacuum") {
     push();
     fill(200, 50, 50);
-    //rect(obj.x, obj.y, obj.width, obj.height);
     image(vacuumImg, obj.x, obj.y, obj.width, obj.height);
     pop();
   } else if (obj.type === "cactus") {
     push();
     fill(200, 50, 50);
-    //rect(obj.x, obj.y, obj.width, obj.height);
     image(cactusImg, obj.x, obj.y, obj.width, obj.height);
     pop();
   } else if (obj.type === "vase") {
@@ -184,7 +187,6 @@ function CollisionBlockSprite(obj) {
       pop();
     }
   } else if (obj.type === "fireplace") {
-    //image(fireplaceImg, sWidth - 300 - (338 / 2), sHeight / 2, 338, 301); // fireplace
     image(fireplaceImg, obj.x, obj.y, obj.width, obj.height);
   } else if (obj.type === "stool") {
     image(stoolImg, obj.x, obj.y, obj.width, obj.height);
@@ -193,7 +195,6 @@ function CollisionBlockSprite(obj) {
   } else if (obj.type === "hiddenSurface") {
     push();
     noFill();
-    //fill("green");
     rect(obj.x, obj.y, obj.width, obj.height);
     pop();
   } else if (obj.type === "lamp") {
@@ -203,15 +204,7 @@ function CollisionBlockSprite(obj) {
   }
 }
 
-//here's all the variables we set before starting everything
-let mainTitleElement;
-let gameText;
-
-let gameState = "loading";
-const gravity = 1;
-let playerScore;
-let playerPosition;
-
+// Object variables
 const cat = {
   x: 180,
   y: sHeight - 30,
@@ -225,7 +218,6 @@ const cat = {
   runSprite: 1,
   maxSpeed: 5,
 };
-
 const vase = {
   x: vaseX,
   y: vaseY,
@@ -239,7 +231,6 @@ const vase = {
   rotation: 0,
   broken: false,
 };
-
 const floor = {
   x: 0,
   y: sHeight - 50,
@@ -248,7 +239,6 @@ const floor = {
   type: "floor",
   dangerous: false,
 };
-
 const wallLeft = {
   x: 0,
   y: 0,
@@ -257,7 +247,6 @@ const wallLeft = {
   type: "wall",
   dangerous: false,
 };
-
 const wallRight = {
   x: sWidth - 50,
   y: 0,
@@ -266,9 +255,8 @@ const wallRight = {
   type: "wall",
   dangerous: false,
 };
-
+// shelf 1 by the window:
 const shelf1 = {
-  // shelf by the window
   x: wallLeft.width - 8,
   y: 275,
   width: 60,
@@ -276,9 +264,8 @@ const shelf1 = {
   type: "shelf",
   dangerous: false,
 };
-
+// Shelf 2 & 3 not being used at the moment:
 const shelf2 = {
-  // not being used at the moment
   x: 380,
   y: floor.y - 200,
   width: 100,
@@ -286,7 +273,6 @@ const shelf2 = {
   type: "shelf",
   dangerous: false,
 };
-
 const shelf3 = {
   // not being used at the moment
   x: 340,
@@ -296,9 +282,8 @@ const shelf3 = {
   type: "shelf",
   dangerous: false,
 };
-
+// Shelf 4 holds the cactus:
 const shelf4 = {
-  // the shelf that holds the cactus
   x: sWidth / 2 - 40,
   y: floor.y - 300,
   width: 300,
@@ -306,9 +291,8 @@ const shelf4 = {
   type: "shelf",
   dangerous: false,
 };
-
+// Shelf 5 holds the vase
 const shelf5 = {
-  // she shelf that holds the vase
   x: vase.x - 60,
   y: vase.y + vase.height,
   width: 140,
@@ -316,7 +300,6 @@ const shelf5 = {
   type: "shelf",
   dangerous: false,
 };
-
 const vacuum1 = {
   x: 300,
   y: sHeight - 80,
@@ -328,7 +311,6 @@ const vacuum1 = {
   endPoint: 500,
   speed: 2,
 };
-
 const cactus1 = {
   x: 680,
   y: shelf4.y - 180 * 0.5,
@@ -340,7 +322,6 @@ const cactus1 = {
   endPoint: 0,
   speed: 0,
 };
-
 const stool = {
   x: 600,
   y: sHeight - floor.height - 70,
@@ -349,7 +330,6 @@ const stool = {
   type: "stool",
   dangerous: false,
 };
-
 const stoolSurface = {
   x: stool.x,
   y: stool.y,
@@ -358,7 +338,6 @@ const stoolSurface = {
   type: "hiddenSurface",
   dangerous: false,
 };
-
 const window1 = {
   x: wallLeft.width + 80,
   y: 150,
@@ -367,7 +346,6 @@ const window1 = {
   type: "window",
   dangerous: false,
 };
-
 const windowSurfaceBottom = {
   x: window1.x,
   y: window1.y + window1.height - 78,
@@ -384,7 +362,6 @@ const windowSurfaceTop = {
   type: "hiddenSurface",
   dangerous: false,
 };
-
 const fireplace1 = {
   x: 750,
   y: sHeight - 300 * 0.8 - floor.height,
@@ -393,7 +370,6 @@ const fireplace1 = {
   type: "fireplace",
   dangerous: false,
 };
-
 const fireplaceSurface = {
   x: fireplace1.x,
   y: fireplace1.y + 52,
@@ -402,7 +378,6 @@ const fireplaceSurface = {
   type: "hiddenSurface",
   dangerous: false,
 };
-
 const lamp = {
   x: sWidth - 250,
   y: 0,
@@ -411,7 +386,6 @@ const lamp = {
   type: "lamp",
   dangerous: false,
 };
-
 const plant1 = {
   x: wallLeft.width + 10,
   y: sHeight - 285,
@@ -420,9 +394,9 @@ const plant1 = {
   type: "plant",
   dangerous: false,
 };
+///////////////////////// End of object variables
 
-// list of all collision blocks
-// TEST, taking our self 2 / 3
+// list of all collision blocks:
 const collisionBlocks = [
   floor,
   shelf1,
@@ -444,13 +418,11 @@ const obstacles = [vacuum1, cactus1];
 
 //The main draw function that is called many times per second
 function draw() {
-  // Different game states
+  // Different game states:
   if (gameState === "loading") {
     //here we could have a loading screen if we want it, but it might be unnecessary
   } else if (gameState === "start") {
     //Here's where we summon the start screen
-    //let currentTime = 0;
-    //background(250, 230, 150);
     background("#181a18");
     fill("#fff");
     textAlign(CENTER);
@@ -488,7 +460,6 @@ function draw() {
 
     // "Enter name" text
     push();
-    textSize(20);
     text(
       "Make sure to enter your name in the field below before you start to save your score!",
       sWidth / 2,
@@ -511,31 +482,34 @@ function draw() {
     gameText = "press ENTER to start playing";
     text(gameText, sWidth / 2, 440);
     pop();
+    ///////////////////// End of start state
   } else if (gameState === "play") {
-    //here's where we have all the gameplay code
+    // The gamestate where the actual game takes place
 
-    background(bgImg); // wallpaper
-
+    // Setting the background image
+    background(bgImg);
     // Resetting the vase img
     vase.broken = false;
 
+    // Runs our time logic to help creating a timer:
     timeLogic();
 
-    //renders all platforms and obstacles
+    //renders all platforms and obstacles:
     renderAllSprites();
 
-    //draws the cat character
+    //draws the cat character:
     catSprite(cat);
 
-    // Moving the cat
+    // Moving the cat:
     catSideMovement();
 
-    //controls collision
+    //controls collision:
     catDetectCollision();
 
-    //collision with things that hurt you
+    //collision with things that hurt you:
     catDetectDamage();
 
+    // If-statement that makes sure the cat's down speed is never faster than 20
     if (cat.downSpeed > 20) {
       cat.downSpeed = 20;
     }
@@ -544,10 +518,10 @@ function draw() {
     // controls of moving left and right (looked at garrits lecture "12: Example - Move a car with the keyboard" and took inspiration for this section)
     cat.x = cat.x + cat.sideSpeed;
 
-    // moves the obstacles that move
+    // Function that moves the obstacles that should be moving:
     obstacleMovement();
 
-    ///// End of play state
+    ///////////////// End of play state
   } else if (gameState === "win") {
     // Here's the screen if you win the game
     background(bgImg);
@@ -646,8 +620,6 @@ function draw() {
     textSize(14);
     text("Press ENTER to play again", sWidth / 2, sHeight / 1.8);
     pop();
-    // Display highscore
-    // Replay button
   }
 }
 
@@ -931,12 +903,6 @@ function displayScoreboard() {
   for (let index in sessionScoreBoard) {
     let player = sessionScoreBoard[index];
     userPosition++;
-    /*     text(
-      userPosition + ". " + player.name + ": " + player.score + "s left",
-      sWidth / 2 - 60,
-      sHeight / 2 + index * 20
-    ); */
-
     text(
       userPosition +
         ". " +
@@ -981,12 +947,12 @@ function keyPressed() {
     cat.downSpeed = cat.jumpHeight * -1;
   }
   // testing our win and loose states
-  // Press W for win state
+  /*   // Press W for win state
   if (gameState === "play" && keyCode === 87) {
     gameState = "win";
   }
   // Press Q for loose state
   if (gameState === "play" && keyCode === 81) {
     gameState = "loose";
-  }
+  } */
 }
