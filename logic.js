@@ -505,7 +505,7 @@ function draw() {
     pop();
 
     // Intruction text
-    text("Use the arrow keys and Z to jump", sWidth / 2, 410);
+    text("Use the arrow keys to move and Z to jump", sWidth / 2, 410);
 
     // Play text
     gameText = "press ENTER to start playing";
@@ -554,7 +554,7 @@ function draw() {
     renderAllSprites();
 
     // resetting cat position
-    cat.x = 100;
+    cat.x = 180;
     cat.y = sHeight - 30;
 
     //throws the vase off of the shelf
@@ -627,10 +627,6 @@ function draw() {
 
     fill("#fff");
     textAlign(CENTER);
-
-    // resetting cat position
-    cat.x = 100;
-    cat.y = sHeight - 30;
 
     //headline
     push();
