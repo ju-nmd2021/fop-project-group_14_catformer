@@ -24,6 +24,7 @@ let vaseImg;
 let brokenVaseImg;
 let vacuumImg;
 let cactusImg;
+let plantImg;
 let fireplaceImg;
 let stoolImg;
 let windowImg;
@@ -35,6 +36,7 @@ function preload() {
   brokenVaseImg = loadImage("images/broken-vase.png");
   vacuumImg = loadImage("images/vacuum.png");
   cactusImg = loadImage("images/cactus.png");
+  plantImg = loadImage("images/big-plant.png");
   fireplaceImg = loadImage("images/fireplace.png");
   stoolImg = loadImage("images/stool.png");
   windowImg = loadImage("images/window.png");
@@ -196,8 +198,8 @@ function CollisionBlockSprite(obj) {
     pop();
   } else if (obj.type === "lamp") {
     image(lampImg, obj.x, obj.y, obj.width, obj.height);
-  } else if (obj.type === "misc") {
-    image(miscImg, obj.x, obj.y, obj.width, obj.height);
+  } else if (obj.type === "plant") {
+    image(plantImg, obj.x, obj.y, obj.width, obj.height);
   }
 }
 
@@ -211,7 +213,7 @@ let playerScore;
 let playerPosition;
 
 const cat = {
-  x: 100,
+  x: 180,
   y: sHeight - 30,
   acceleration: 0.5,
   jumpHeight: 17,
@@ -269,7 +271,7 @@ const shelf1 = {
   // shelf by the window
   x: wallLeft.width - 8,
   y: 275,
-  width: 70,
+  width: 60,
   height: 30,
   type: "shelf",
   dangerous: false,
@@ -410,6 +412,15 @@ const lamp = {
   dangerous: false,
 };
 
+const plant1 = {
+  x: wallLeft.width + 10,
+  y: sHeight - 285,
+  width: 115,
+  height: 235,
+  type: "plant",
+  dangerous: false,
+};
+
 // list of all collision blocks
 // TEST, taking our self 2 / 3
 const collisionBlocks = [
@@ -426,7 +437,7 @@ const collisionBlocks = [
   vase,
 ];
 //list of all NON collision blocks
-const nonCollisionBlocks = [fireplace1, window1, stool, lamp];
+const nonCollisionBlocks = [fireplace1, window1, stool, lamp, plant1];
 
 //list of all obstacles
 const obstacles = [vacuum1, cactus1];
@@ -604,7 +615,7 @@ function draw() {
     renderAllSprites();
 
     // resetting cat position
-    cat.x = 100;
+    cat.x = 180;
     cat.y = sHeight - 30;
 
     // Semi transparent bg:
