@@ -423,11 +423,15 @@ function draw() {
   } else if (gameState === "start") {
     //Here's where we summon the start screen
     //let currentTime = 0;
-    background(250, 230, 150);
+    //background(250, 230, 150);
+    background("#181a18");
+    fill("#fff");
     textAlign(CENTER);
+    textFont("Josefin Sans");
 
     // Game title
     push();
+    fill(wallColor);
     textSize(110);
     textFont("Exo");
     text("CATFORMER", sWidth / 2, sHeight / 3);
@@ -450,6 +454,7 @@ function draw() {
     // "Enter name" headline
     push();
     textSize(30);
+    fill(wallColor);
     textFont("Exo");
     text("Wait! Want a chance on the scoreboard?", sWidth / 2, 500);
     pop();
@@ -467,6 +472,7 @@ function draw() {
     // Instruction headline
     push();
     textSize(30);
+    fill(wallColor);
     textFont("Exo");
     text("How to play", sWidth / 2, 370);
     pop();
@@ -870,7 +876,11 @@ function displayPlayerResult() {
     text("You didn't get on the leaderboard", sWidth / 2, 270);
   } else if (playerPosition === -1) {
     //if you didn't write your name, you don't get to join
-    text("Oh no... You didn't enter your name in the field", sWidth / 2, 270);
+    text(
+      "... Oh no, you forgot to enter your name in the field...",
+      sWidth / 2,
+      270
+    );
   } else {
     //otherwise, you've joined the scoreboard
     let positionOnLeaderboard = playerPosition + 1;

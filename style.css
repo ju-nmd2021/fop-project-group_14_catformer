@@ -1,39 +1,49 @@
 * {
-    background: #181a18;
-    /* background: lightyellow; */
-    /* font-family: "Fredoka One", sans-serif; */
-    font-family: arial, sans-serif;
-    /* color: #ffcb3e; */
-    color: lightyellow;
-}
-
-.container {
-    text-align: center;
-    margin: 50px auto;
-    width: 1100px;
+  background: #181a18;
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 20px;
+  color: lightyellow;
+  font-weight: 300;
 }
 
 h1,
 h2,
 h3,
 h4 {
-    font-family: "Exo", sans-serif;
-    text-transform: uppercase;
-    /* color: #f5e45f; */
+  font-family: "Exo", sans-serif;
+  text-transform: uppercase;
+  color: #9fbfd1;
+}
+
+strong {
+  text-transform: uppercase;
+}
+
+.container {
+  text-align: center;
+  margin: 50px auto;
+  width: 1100px;
 }
 
 .asideContainer {
-    text-align: left;
-    margin: auto;
+  text-align: left;
+  margin: auto;
+}
+
+aside {
+  padding: 20px;
 }
 
 #gameDescription {
-    float: left;
-    width: 45%;
-    /* padding-right: 40px; */
+  float: left;
+  width: 30%;
+}
+#nameInput {
+  float: right;
+  width: 30%;
 }
 
 #gameControls {
-    float: right;
-    width: 35%;
+  float: left;
+  width: 28%;
 }
