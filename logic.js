@@ -527,11 +527,11 @@ function draw() {
     background(bgImg);
     renderAllSprites();
 
-    // resetting cat position
+    // resetting cat's starting position
     cat.x = 180;
     cat.y = sHeight - 30;
 
-    //throws the vase off of the shelf
+    //throws the vase off of the shelf:
     vaseMovement();
 
     // Semi transparent bg:
@@ -565,7 +565,7 @@ function draw() {
       240
     );
 
-    //Tells the player what results they got and if they got on the scoreboard
+    //Tells the player what results they got and if they got on the scoreboard:
     displayPlayerResult();
 
     //scoreboard headline
@@ -575,7 +575,7 @@ function draw() {
     text("Scoreboard", sWidth / 2, 340);
     pop();
 
-    //Loops through all results from the scoreboard and displays them
+    //Loops through all results from the scoreboard and displays them:
     displayScoreboard();
 
     // Replay text
@@ -583,6 +583,7 @@ function draw() {
     textSize(14);
     text("Press ENTER to play again", sWidth / 2, sHeight / 1.4);
     pop();
+    ///////////////////////////// End of Win state
   } else if (gameState === "loose") {
     // Here's the screen if you loose the game
     background(bgImg);
@@ -620,6 +621,7 @@ function draw() {
     textSize(14);
     text("Press ENTER to play again", sWidth / 2, sHeight / 1.8);
     pop();
+    ///////////////////////// End of loose state
   }
 }
 
@@ -648,9 +650,10 @@ function timeLogic() {
     cat.runSprite *= -1;
   }
 
-  // creating a timer
+  // creating the timer:
   push();
   fill(255, 255, 255);
+  // if statement that shows the time penalty if cat runs into an obstacle:
   if (cat.invincibility > 0) {
     fill(255, 100, 100);
     textAlign(LEFT);
@@ -686,33 +689,34 @@ function renderAllSprites() {
 
 //the logic for the cat's sideways movement
 function catSideMovement() {
+  // If you move to the left:
   if (keyIsDown(37) || keyIsDown(65)) {
     if (cat.direction === "right") {
       cat.direction = "left";
     }
-    // with acceleration
-    // cat.sideSpeed -= cat.acceleration;
 
-    //without acceleration
     cat.sideSpeed -= cat.acceleration;
+
     if (cat.sideSpeed < -cat.maxSpeed) {
       cat.sideSpeed = -cat.maxSpeed;
     }
-  } // right arrow:
+  }
+
+  // If you move to the right:
   else if (keyIsDown(39) || keyIsDown(68)) {
     // right arrow:
     if (cat.direction === "left") {
       cat.direction = "right";
     }
-    // with acceleration
-    // cat.sideSpeed += cat.acceleration;
 
-    //without acceleration
     cat.sideSpeed += cat.acceleration;
+
     if (cat.sideSpeed > cat.maxSpeed) {
       cat.sideSpeed = cat.maxSpeed;
     }
-  } // cat's not moving:
+  }
+
+  // If the cat's not moving:
   else {
     cat.sideSpeed *= 0.8;
     if (cat.sideSpeed < 0.01 && cat.sideSpeed > -0.01) {
@@ -741,8 +745,6 @@ function vaseMovement() {
   } else {
     vase.rotation = 0;
     vase.broken = true;
-    console.log("rotation: " + vase.rotation);
-    console.log("vase x: " + vase.x);
   }
 }
 
@@ -858,7 +860,7 @@ function checkScore(newScore) {
       scoreCheck = i;
     }
   }
-  //can't join the scoreboard if you never chose a name
+  // You can't join the scoreboard if you never chose a name:
   if (userNameElement.value !== "") {
     let newPlacement = {
       name: userNameElement.value,
@@ -930,7 +932,7 @@ function keyPressed() {
     (gameState === "loose" && keyCode === 13)
   ) {
     gameState = "play";
-    // startTime checks at what time we pressed the play button. the varieble is used in our countdown timer in our "play" gamestate
+    // startTime checks at what time we pressed the play button. the varieble is used in our countdown timer
     startTimeSec = int(millis() / 1000);
     startTimeMil = int(millis() / 100);
     timePenalty = 0;
