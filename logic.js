@@ -31,7 +31,7 @@ let lampImg;
 //here's all the variables we set before starting everything
 let mainTitleElement;
 let gameText;
-let gameState = "loading";
+let gameState = "start";
 const gravity = 1;
 let playerScore;
 let playerPosition;
@@ -264,24 +264,6 @@ const shelf1 = {
   type: "shelf",
   dangerous: false,
 };
-// Shelf 2 & 3 not being used at the moment:
-const shelf2 = {
-  x: 380,
-  y: floor.y - 200,
-  width: 100,
-  height: 50,
-  type: "shelf",
-  dangerous: false,
-};
-const shelf3 = {
-  // not being used at the moment
-  x: 340,
-  y: floor.y - 300,
-  width: 50,
-  height: 150,
-  type: "shelf",
-  dangerous: false,
-};
 // Shelf 4 holds the cactus:
 const shelf4 = {
   x: sWidth / 2 - 40,
@@ -419,9 +401,7 @@ const obstacles = [vacuum1, cactus1];
 //The main draw function that is called many times per second
 function draw() {
   // Different game states:
-  if (gameState === "loading") {
-    //here we could have a loading screen if we want it, but it might be unnecessary
-  } else if (gameState === "start") {
+  if (gameState === "start") {
     //Here's where we summon the start screen
     background("#181a18");
     fill("#fff");
@@ -813,8 +793,6 @@ function catDetectCollision() {
         vase.speed = -10;
         gameState = "win";
       }
-    } else {
-      //if the cat hasn't collided with anything, it will be affected by gravity
     }
   }
 
