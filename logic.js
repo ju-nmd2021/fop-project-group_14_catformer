@@ -10,7 +10,7 @@ function setup() {
 let timeLimit = 25; // the game time limit
 let countDown; // = time limit - amount of time passed
 let currentTimeSec = 0;
-let currentTimeMil = 0;
+let currentTimeDec = 0;
 let startTimeSec = 0;
 let startTimeMil = 0;
 let timePenalty = 0;
@@ -360,7 +360,7 @@ const window1 = {
 
 const windowSurfaceBottom = {
   x: window1.x,
-  y: window1.y + window1.height - 80,
+  y: window1.y + window1.height - 78,
   width: window1.width,
   height: 50,
   type: "hiddenSurface",
@@ -368,7 +368,7 @@ const windowSurfaceBottom = {
 };
 const windowSurfaceTop = {
   x: window1.x,
-  y: window1.y,
+  y: window1.y + 4,
   width: window1.width,
   height: 20,
   type: "hiddenSurface",
@@ -626,20 +626,15 @@ function draw() {
 function timeLogic() {
   // Testing countdown timer based on this tutorial: https://www.youtube.com/watch?v=rKhwDhp9dcs&ab_channel=flanniganable
   currentTimeSec = int(millis() / 1000); // this runs in the background and counts how many seconds has passed
-  currentTimeMil = int(millis() / 10); // this runs in the background and counts how many milliseconds has passed
+  currentTimeDec = int(millis() / 100); // this runs in the background and counts how many milliseconds has passed
 
   countDown = timeLimit - (currentTimeSec - startTimeSec) - timePenalty;
-  let countDownMil = timeLimit - (currentTimeMil - startTimeMil);
+  let countDownMil = timeLimit - (currentTimeDec - startTimeMil);
 
   //if counter reaches 0, you've run out of time
   if (countDown < 0) {
     countDown = 0;
     gameState = "loose";
-  }
-
-  //every 5 milliseconds, the cat goes into the second run sprite
-  if ((currentTimeMil / 5) % 2 === 0) {
-    cat.runSprite *= -1;
   }
 
   if (frameCounter === 60) {
@@ -656,9 +651,9 @@ function timeLogic() {
   push();
   //let timer = "10:00:00";
   fill(0, 0, 0);
-  textAlign("center");
+  textAlign(LEFT);
   textSize(36);
-  text(countDown + ":" + (countDownMil % 100), sWidth - 150, 50);
+  text(countDown + ":" + (9 + (countDownMil % 10)), sWidth - 150, 50);
   pop();
 }
 
@@ -834,8 +829,8 @@ function catDetectDamage() {
       //this makes it so that the cat doesn't get hurt many times in a row
       cat.invincibility = 60;
 
-      //this reduces the timer by 1 as your penalty
-      timePenalty++;
+      //this reduces the timer by 2 as your penalty
+      timePenalty += 2;
     }
   }
 
