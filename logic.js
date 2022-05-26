@@ -27,7 +27,8 @@ let cactusImg;
 let fireplaceImg;
 let stoolImg;
 let windowImg;
-
+let bgImg;
+let lampImg;
 function preload() {
   // Loading images
   vaseImg = loadImage("images/vase.png");
@@ -37,12 +38,14 @@ function preload() {
   fireplaceImg = loadImage("images/fireplace.png");
   stoolImg = loadImage("images/stool.png");
   windowImg = loadImage("images/window.png");
+  bgImg = loadImage("images/bg-room.png");
+  lampImg = loadImage("images/lamp.png");
 }
 
 //a counter that just counts the passing frames
 let frameCounter = 0;
 
-//the input field for the user name
+//thfloore input field for the user name
 let userNameElement;
 let sessionScoreBoard;
 
@@ -131,7 +134,8 @@ function CollisionBlockSprite(obj) {
   strokeWeight(0);
   if (obj.type === "floor") {
     push();
-    fill("#C7B299");
+    //fill("#C7B299");
+    noFill();
     rect(obj.x, obj.y, obj.width, obj.height);
     pop();
   } else if (obj.type === "wall") {
@@ -143,7 +147,7 @@ function CollisionBlockSprite(obj) {
   } else if (obj.type === "shelf") {
     push();
     fill("#534741");
-    rect(obj.x, obj.y, obj.width, obj.height, 50);
+    rect(obj.x, obj.y, obj.width, obj.height);
     pop();
   } else if (obj.type === "vacuum") {
     push();
@@ -190,6 +194,10 @@ function CollisionBlockSprite(obj) {
     //fill("green");
     rect(obj.x, obj.y, obj.width, obj.height);
     pop();
+  } else if (obj.type === "lamp") {
+    image(lampImg, obj.x, obj.y, obj.width, obj.height);
+  } else if (obj.type === "misc") {
+    image(miscImg, obj.x, obj.y, obj.width, obj.height);
   }
 }
 
@@ -259,9 +267,9 @@ const wallRight = {
 
 const shelf1 = {
   // shelf by the window
-  x: 0,
+  x: wallLeft.width - 8,
   y: 275,
-  width: 100,
+  width: 70,
   height: 30,
   type: "shelf",
   dangerous: false,
@@ -387,10 +395,18 @@ const fireplace1 = {
 const fireplaceSurface = {
   x: fireplace1.x,
   y: fireplace1.y + 52,
-  //y: sHeight - 238 - floor.height,
   width: fireplace1.width,
   height: 30,
   type: "hiddenSurface",
+  dangerous: false,
+};
+
+const lamp = {
+  x: sWidth - 250,
+  y: 0,
+  width: 146,
+  height: 209,
+  type: "lamp",
   dangerous: false,
 };
 
@@ -410,7 +426,7 @@ const collisionBlocks = [
   vase,
 ];
 //list of all NON collision blocks
-const nonCollisionBlocks = [fireplace1, window1, stool];
+const nonCollisionBlocks = [fireplace1, window1, stool, lamp];
 
 //list of all obstacles
 const obstacles = [vacuum1, cactus1];
@@ -487,7 +503,7 @@ function draw() {
   } else if (gameState === "play") {
     //here's where we have all the gameplay code
 
-    background(wallColor); // wallpaper
+    background(bgImg); // wallpaper
 
     // Resetting the vase img
     vase.broken = false;
@@ -523,7 +539,7 @@ function draw() {
     ///// End of play state
   } else if (gameState === "win") {
     // Here's the screen if you win the game
-    background(wallColor);
+    background(bgImg);
     renderAllSprites();
 
     // resetting cat position
@@ -584,7 +600,7 @@ function draw() {
     pop();
   } else if (gameState === "loose") {
     // Here's the screen if you loose the game
-    background(wallColor);
+    background(bgImg);
     renderAllSprites();
 
     // resetting cat position
