@@ -682,7 +682,15 @@ function timeLogic() {
 
   // creating a timer
   push();
-  //let timer = "10:00:00";
+  fill(255, 255, 255);
+  if (cat.invincibility > 0) {
+    fill(255, 100, 100);
+    textAlign(LEFT);
+    textSize(30);
+    text("-2s", sWidth - 150, 90);
+  }
+  strokeWeight(0);
+  rect(sWidth - 163, 13, 100, 50);
   fill(0, 0, 0);
   textAlign(LEFT);
   textSize(36);
