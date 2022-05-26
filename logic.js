@@ -564,8 +564,8 @@ function draw() {
     text("Press ENTER to play again", sWidth / 2, sHeight / 1.4);
     pop();
     ///////////////////////////// End of Win state
-  } else if (gameState === "loose") {
-    // Here's the screen if you loose the game
+  } else if (gameState === "lose") {
+    // Here's the screen if you lose the game
     background(bgImg);
     renderAllSprites();
 
@@ -601,7 +601,7 @@ function draw() {
     textSize(14);
     text("Press ENTER to play again", sWidth / 2, sHeight / 1.8);
     pop();
-    ///////////////////////// End of loose state
+    ///////////////////////// End of lose state
   }
 }
 
@@ -617,7 +617,7 @@ function timeLogic() {
   //if counter reaches 0, you've run out of time
   if (countDown < 0) {
     countDown = 0;
-    gameState = "loose";
+    gameState = "lose";
   }
 
   if (frameCounter === 60) {
@@ -684,7 +684,6 @@ function catSideMovement() {
 
   // If you move to the right:
   else if (keyIsDown(39) || keyIsDown(68)) {
-    // right arrow:
     if (cat.direction === "left") {
       cat.direction = "right";
     }
@@ -854,8 +853,10 @@ function checkScore(newScore) {
   return scoreCheck;
 }
 
+//diplays the player's results
 function displayPlayerResult() {
   if (playerPosition === 5) {
+    //if you got 6th position, you don't get to join the scoreboard
     text("You didn't get on the leaderboard", sWidth / 2, 270);
   } else if (playerPosition === -1) {
     //if you didn't write your name, you don't get to join
@@ -907,10 +908,10 @@ function keyPressed() {
   if (
     (gameState === "start" && keyCode === 13) ||
     (gameState === "win" && keyCode === 13) ||
-    (gameState === "loose" && keyCode === 13)
+    (gameState === "lose" && keyCode === 13)
   ) {
     gameState = "play";
-    // startTime checks at what time we pressed the play button. the varieble is used in our countdown timer
+    // startTime checks at what time we pressed the play button. the variable is used in our countdown timer
     startTimeSec = int(millis() / 1000);
     startTimeMil = int(millis() / 100);
     timePenalty = 0;
@@ -926,13 +927,13 @@ function keyPressed() {
   if (keyCode === 90 && cat.state === "stand") {
     cat.downSpeed = cat.jumpHeight * -1;
   }
-  // testing our win and loose states
+  // testing our win and lose states
   /*   // Press W for win state
   if (gameState === "play" && keyCode === 87) {
     gameState = "win";
   }
-  // Press Q for loose state
+  // Press Q for lose state
   if (gameState === "play" && keyCode === 81) {
-    gameState = "loose";
+    gameState = "lose";
   } */
 }
